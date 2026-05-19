@@ -5,27 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0d0d14">
+<meta name="theme-color" content="#0a0a0f">
 <title>CutBack</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:           #0d0d14;
-  --surface:      #13131f;
-  --card:         #1a1a2e;
+  --bg:           #0a0a0f;
+  --surface:      #10101a;
+  --card:         #17172a;
   --border:       rgba(255,255,255,0.07);
-  --border-focus: rgba(139,92,246,0.5);
-  --primary:      #8b5cf6;
-  --primary-glow: rgba(139,92,246,0.25);
-  --success:      #34d399;
-  --warning:      #fbbf24;
-  --danger:       #f87171;
-  --text:         #e2e8f0;
-  --dim:          #94a3b8;
-  --muted:        #475569;
-  --r:            14px;
-  --r-sm:         8px;
+  --border-focus: rgba(0,255,135,0.4);
+  --primary:      #00ff87;
+  --primary-glow: rgba(0,255,135,0.18);
+  --cyan:         #00d4ff;
+  --cyan-glow:    rgba(0,212,255,0.18);
+  --success:      #00ff87;
+  --warning:      #f9e900;
+  --danger:       #ff4757;
+  --text:         #e8eaf0;
+  --dim:          #8892a4;
+  --muted:        #404558;
+  --r:            12px;
+  --r-sm:         7px;
 }
 
 html, body {
@@ -42,7 +44,6 @@ body {
   padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 
-/* ── Layout ── */
 .app {
   max-width: 500px;
   margin: 0 auto;
@@ -58,10 +59,10 @@ header {
 }
 
 .logo {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #a78bfa, #8b5cf6 60%, #7c3aed);
+  background: linear-gradient(120deg, var(--primary), var(--cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -85,8 +86,8 @@ header {
 
 /* ── Today card ── */
 .today-card {
-  background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(124,58,237,0.04) 100%);
-  border: 1px solid rgba(139,92,246,0.18);
+  background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(0,255,135,0.04) 100%);
+  border: 1px solid rgba(0,212,255,0.14);
   border-radius: var(--r);
   padding: 20px;
   margin: 14px 0 12px;
@@ -96,28 +97,28 @@ header {
 }
 
 .today-left { flex: 1; }
-.today-label { font-size: 0.72rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.today-label { font-size: 0.7rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
 .today-count { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--text); }
-.today-note  { font-size: 0.82rem; color: var(--dim); margin-top: 5px; }
+.today-sub   { font-size: 0.78rem; color: var(--dim); margin-top: 6px; }
 
 .today-pill {
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 100px;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   flex-shrink: 0;
+  letter-spacing: 0.03em;
 }
-.pill-good    { background: rgba(52,211,153,0.15); color: var(--success); }
-.pill-warn    { background: rgba(251,191,36,0.15);  color: var(--warning); }
-.pill-neutral { background: rgba(139,92,246,0.15); color: var(--primary); }
+.pill-good { background: rgba(0,255,135,0.12); color: var(--primary); }
+.pill-warn { background: rgba(249,233,0,0.12);  color: var(--warning); }
 
 /* ── Stats grid ── */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
@@ -125,33 +126,34 @@ header {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 16px;
+  padding: 14px 16px;
 }
 
-.stat-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
-.stat-value { font-size: 1.75rem; font-weight: 800; line-height: 1; }
-.stat-meta  { font-size: 0.78rem; color: var(--dim); margin-top: 5px; }
+.stat-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.stat-value { font-size: 1.7rem; font-weight: 800; line-height: 1; }
+.stat-meta  { font-size: 0.75rem; color: var(--dim); margin-top: 5px; }
 
 .c-good    { color: var(--success); }
 .c-warn    { color: var(--warning); }
-.c-primary { color: var(--primary); }
+.c-cyan    { color: var(--cyan); }
 .c-text    { color: var(--text); }
 
-/* ── Chart ── */
+/* ── Section heading ── */
 .section-heading {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   margin-top: 20px;
 }
 
+/* ── Chart ── */
 .chart-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 16px 14px 10px;
+  padding: 14px 12px 10px;
   overflow: hidden;
 }
 
@@ -159,52 +161,50 @@ header {
   display: flex;
   align-items: flex-end;
   gap: 4px;
-  height: 100px;
+  height: 96px;
   position: relative;
 }
 
 .chart-baseline-line {
   position: absolute;
   left: 0; right: 0;
-  height: 1px;
-  border-top: 1px dashed rgba(255,255,255,0.18);
+  height: 0;
+  border-top: 1px dashed rgba(255,255,255,0.14);
   pointer-events: none;
 }
 .chart-baseline-label {
   position: absolute;
   right: 0;
-  top: -16px;
-  font-size: 9px;
-  color: rgba(148,163,184,0.4);
+  top: -15px;
+  font-size: 8px;
+  color: rgba(148,163,184,0.35);
 }
 
 .bar-col {
   flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  height: 100%;
   justify-content: flex-end;
 }
 
 .bar-fill {
   border-radius: 3px 3px 0 0;
   min-height: 2px;
-  transition: height 0.4s cubic-bezier(.4,0,.2,1), background-color 0.3s;
+  transition: height 0.4s cubic-bezier(.4,0,.2,1);
 }
 
 .chart-labels {
   display: flex;
   gap: 4px;
-  margin-top: 6px;
+  margin-top: 5px;
 }
 .chart-label {
   flex: 1;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: var(--muted);
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -212,41 +212,62 @@ header {
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 .entry {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  padding: 13px 14px;
+  padding: 11px 13px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   transition: border-color 0.2s;
 }
-.entry:hover { border-color: rgba(255,255,255,0.12); }
+.entry:hover { border-color: rgba(255,255,255,0.11); }
 
 .entry-date {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: var(--dim);
   flex-shrink: 0;
-  min-width: 66px;
+  min-width: 60px;
 }
 .entry-count {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 800;
   flex-shrink: 0;
-  min-width: 30px;
+  min-width: 22px;
 }
-.entry-note {
-  font-size: 0.83rem;
-  color: var(--dim);
+.entry-info {
   flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+.entry-type {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.entry-meta {
+  font-size: 0.7rem;
+  color: var(--dim);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.entry-units {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--cyan);
+  flex-shrink: 0;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(0,212,255,0.1);
 }
 .entry-del {
   width: 28px;
@@ -263,13 +284,13 @@ header {
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
-.entry-del:hover { background: rgba(248,113,113,0.14); color: var(--danger); }
+.entry-del:hover { background: rgba(255,71,87,0.12); color: var(--danger); }
 
 .empty-state {
   text-align: center;
-  padding: 36px 20px;
+  padding: 32px 20px;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   line-height: 1.6;
 }
 
@@ -279,30 +300,34 @@ header {
   bottom: calc(20px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
-  color: #fff;
+  background: linear-gradient(120deg, var(--primary), var(--cyan));
+  color: #050a08;
   border: none;
   border-radius: 28px;
-  padding: 15px 28px;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 14px 28px;
+  font-size: 0.95rem;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 28px var(--primary-glow), 0 2px 8px rgba(0,0,0,0.4);
+  gap: 7px;
+  box-shadow: 0 0 28px var(--primary-glow), 0 0 12px var(--cyan-glow), 0 2px 8px rgba(0,0,0,0.5);
   z-index: 100;
   transition: transform 0.15s, box-shadow 0.15s;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
-.fab:active { transform: translateX(-50%) scale(0.96); box-shadow: 0 2px 12px var(--primary-glow); }
+.fab:active {
+  transform: translateX(-50%) scale(0.96);
+  box-shadow: 0 0 14px var(--primary-glow);
+}
 
 /* ── Modals ── */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0,0,0,0.7);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
@@ -310,55 +335,56 @@ header {
   z-index: 200;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s;
+  transition: opacity 0.22s;
 }
 .overlay.open { opacity: 1; pointer-events: all; }
 
 .sheet {
   background: var(--surface);
   border-top: 1px solid var(--border);
-  border-radius: 22px 22px 0 0;
-  padding: 20px 22px calc(22px + env(safe-area-inset-bottom));
+  border-radius: 20px 20px 0 0;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom));
   width: 100%;
   transform: translateY(100%);
-  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .overlay.open .sheet { transform: translateY(0); }
 
 .sheet-handle {
-  width: 36px;
-  height: 4px;
-  background: var(--border);
+  width: 34px;
+  height: 3px;
+  background: var(--muted);
   border-radius: 2px;
-  margin: 0 auto 18px;
+  margin: 0 auto 16px;
+  opacity: 0.5;
 }
-.sheet-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 18px; }
+.sheet-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
 
-/* Center modal variant (onboarding) */
+/* Center variant (onboarding) */
 .overlay.center { align-items: center; padding: 20px; }
 .overlay.center .sheet {
-  border-radius: 20px;
+  border-radius: 16px;
   border: 1px solid var(--border);
   max-width: 420px;
-  transform: translateY(20px) scale(0.96);
+  transform: translateY(16px) scale(0.97);
   opacity: 0;
-  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s;
 }
 .overlay.center.open .sheet { transform: translateY(0) scale(1); opacity: 1; }
 
-.onb-icon  { font-size: 2.8rem; text-align: center; margin-bottom: 12px; }
-.onb-title { text-align: center; font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
-.onb-sub   { text-align: center; color: var(--dim); font-size: 0.88rem; line-height: 1.6; margin-bottom: 24px; }
+.onb-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+.onb-sub   { font-size: 0.82rem; color: var(--dim); margin-bottom: 22px; line-height: 1.5; }
 
 /* ── Forms ── */
 .form-group { margin-bottom: 14px; }
 .form-label {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--dim);
   margin-bottom: 7px;
+  font-weight: 500;
 }
-.form-hint { font-size: 0.75rem; color: var(--muted); margin-top: 5px; }
+.form-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; }
 
 .input {
   width: 100%;
@@ -367,7 +393,7 @@ header {
   border-radius: var(--r-sm);
   color: var(--text);
   font-size: 1rem;
-  padding: 12px 14px;
+  padding: 11px 13px;
   outline: none;
   transition: border-color 0.2s;
   -webkit-appearance: none;
@@ -377,8 +403,49 @@ header {
 .input[type="number"] { -moz-appearance: textfield; }
 .input[type="number"]::-webkit-inner-spin-button,
 .input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.input-narrow { max-width: 88px; }
 
-.input-narrow { max-width: 90px; }
+/* Drink type grid */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.type-chip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 8px 5px 7px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.12s, background 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.type-chip:hover { border-color: rgba(255,255,255,0.14); }
+.type-chip.selected {
+  border-color: var(--primary);
+  background: rgba(0,255,135,0.07);
+}
+.chip-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+.chip-sub {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.chip-mult {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--primary);
+  margin-top: 2px;
+  font-weight: 700;
+}
 
 /* Stepper */
 .stepper {
@@ -391,44 +458,54 @@ header {
   user-select: none;
 }
 .stepper-btn {
-  width: 56px;
-  height: 56px;
+  width: 54px;
+  height: 52px;
   border: none;
   background: transparent;
   color: var(--text);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.12s;
+  transition: background 0.1s;
   flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
-.stepper-btn:hover { background: rgba(255,255,255,0.05); }
-.stepper-btn:active { background: rgba(255,255,255,0.09); }
+.stepper-btn:hover  { background: rgba(255,255,255,0.04); }
+.stepper-btn:active { background: rgba(255,255,255,0.08); }
 .stepper-val {
   flex: 1;
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: var(--primary);
+}
+
+.unit-readout {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--cyan);
+  font-weight: 700;
+  margin-top: 7px;
+  letter-spacing: 0.02em;
 }
 
 /* Buttons */
 .btn-primary {
   display: block;
   width: 100%;
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
-  color: #fff;
+  background: linear-gradient(120deg, var(--primary), var(--cyan));
+  color: #050a08;
   border: none;
   border-radius: var(--r-sm);
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 13px;
+  font-size: 0.95rem;
+  font-weight: 800;
   cursor: pointer;
   margin-top: 8px;
   transition: opacity 0.15s;
+  letter-spacing: 0.01em;
   -webkit-tap-highlight-color: transparent;
 }
 .btn-primary:active { opacity: 0.88; }
@@ -440,9 +517,9 @@ header {
   border: none;
   color: var(--dim);
   padding: 12px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  margin-top: 4px;
+  margin-top: 2px;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -451,29 +528,26 @@ header {
   border: 1px solid var(--border);
   color: var(--dim);
   border-radius: var(--r-sm);
-  padding: 9px 16px;
-  font-size: 0.88rem;
+  padding: 8px 15px;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-outline:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.btn-outline:hover { border-color: rgba(255,255,255,0.18); color: var(--text); }
+
 .btn-danger-outline {
   background: none;
-  border: 1px solid rgba(248,113,113,0.3);
+  border: 1px solid rgba(255,71,87,0.28);
   color: var(--danger);
   border-radius: var(--r-sm);
-  padding: 9px 16px;
-  font-size: 0.88rem;
+  padding: 8px 15px;
+  font-size: 0.85rem;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 20px 0;
-}
+.divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 
 /* ── Toast ── */
 .toast {
@@ -484,28 +558,27 @@ header {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 100px;
-  padding: 10px 20px;
-  font-size: 0.88rem;
+  padding: 9px 18px;
+  font-size: 0.85rem;
   color: var(--text);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
   z-index: 999;
   white-space: nowrap;
-  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.26s cubic-bezier(0.4,0,0.2,1);
   pointer-events: none;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ── Footer ── */
 footer {
   text-align: center;
-  padding: 16px 0 8px;
-  font-size: 0.72rem;
+  padding: 14px 0 6px;
+  font-size: 0.7rem;
   color: var(--muted);
 }
 
 /* ── Desktop ── */
 @media (min-width: 768px) {
-  .app { max-width: 780px; }
+  .app { max-width: 800px; }
 
   .main-cols {
     display: grid;
@@ -514,17 +587,15 @@ footer {
     align-items: start;
   }
 
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-
   .overlay { align-items: center; }
   .overlay:not(.center) .sheet {
-    border-radius: 20px;
+    border-radius: 16px;
     border: 1px solid var(--border);
-    max-width: 440px;
+    max-width: 460px;
     margin: 0 auto;
-    transform: translateY(20px) scale(0.97);
+    transform: translateY(16px) scale(0.97);
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s;
   }
   .overlay:not(.center).open .sheet {
     transform: translateY(0) scale(1);
@@ -537,32 +608,28 @@ footer {
 </head>
 <body>
 
-<div class="app" id="app">
+<div class="app">
   <header>
     <span class="logo">CutBack</span>
     <button class="icon-btn" id="js-settings-btn" aria-label="Settings">
-      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </svg>
     </button>
   </header>
 
-  <!-- desktop: two-column wrapper -->
   <div class="main-cols">
-    <!-- left col -->
     <div>
-      <!-- today -->
       <div class="today-card">
         <div class="today-left">
           <div class="today-label">Today</div>
           <div class="today-count" id="js-today-count">0</div>
-          <div class="today-note"  id="js-today-note">No drinks logged yet</div>
+          <div class="today-sub"  id="js-today-sub">no units logged</div>
         </div>
         <div id="js-today-pill"></div>
       </div>
 
-      <!-- stats -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">This Week</div>
@@ -576,54 +643,58 @@ footer {
         </div>
         <div class="stat-card">
           <div class="stat-label">Saved This Week</div>
-          <div class="stat-value c-primary" id="js-saved-week">—</div>
+          <div class="stat-value c-cyan" id="js-saved-week">—</div>
           <div class="stat-meta" id="js-saved-week-meta"></div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Total Saved</div>
-          <div class="stat-value c-primary" id="js-saved-total">—</div>
+          <div class="stat-value c-cyan" id="js-saved-total">—</div>
           <div class="stat-meta" id="js-saved-total-meta"></div>
         </div>
       </div>
 
-      <!-- chart -->
       <div class="section-heading">8-Week Trend</div>
       <div class="chart-card">
-        <div class="chart-bars" id="js-chart-bars" style="position:relative;"></div>
+        <div class="chart-bars" id="js-chart-bars"></div>
         <div class="chart-labels" id="js-chart-labels"></div>
       </div>
     </div>
 
-    <!-- right col (history) -->
     <div>
       <div class="section-heading">Log History</div>
       <div class="history-list" id="js-history"></div>
-      <footer>Data stored on your device only.</footer>
+      <footer>Stored locally on this device.</footer>
     </div>
   </div>
 </div>
 
 <!-- FAB -->
 <button class="fab" id="js-log-btn">
-  <svg width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+  <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24">
     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
   </svg>
   Log Drink
 </button>
 
-<!-- ── Log modal ── -->
-<div class="overlay" id="js-log-modal" role="dialog" aria-modal="true" aria-label="Log drinks">
+<!-- Log modal -->
+<div class="overlay" id="js-log-modal" role="dialog" aria-modal="true" aria-label="Log drink">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Log Drinks</div>
+    <div class="sheet-title">Log Drink</div>
 
     <div class="form-group">
-      <label class="form-label">How many drinks?</label>
+      <label class="form-label">Type</label>
+      <div class="type-grid" id="js-type-grid"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Quantity</label>
       <div class="stepper">
         <button class="stepper-btn" id="js-step-minus" aria-label="Decrease">−</button>
         <div class="stepper-val" id="js-step-val">1</div>
         <button class="stepper-btn" id="js-step-plus" aria-label="Increase">+</button>
       </div>
+      <div class="unit-readout" id="js-unit-readout">= 1.0 units</div>
     </div>
 
     <div class="form-group">
@@ -633,7 +704,7 @@ footer {
 
     <div class="form-group">
       <label class="form-label" for="js-log-note">Note <span style="color:var(--muted)">(optional)</span></label>
-      <input class="input" type="text" id="js-log-note" placeholder="dinner, birthday party…" maxlength="80">
+      <input class="input" type="text" id="js-log-note" placeholder="dinner, bar, home…" maxlength="80">
     </div>
 
     <button class="btn-primary" id="js-log-submit">Save</button>
@@ -641,21 +712,22 @@ footer {
   </div>
 </div>
 
-<!-- ── Settings modal ── -->
+<!-- Settings modal -->
 <div class="overlay" id="js-settings-modal" role="dialog" aria-modal="true" aria-label="Settings">
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">Settings</div>
 
     <div class="form-group">
-      <label class="form-label" for="js-s-baseline">Typical drinks per week (your starting point)</label>
-      <input class="input" type="number" id="js-s-baseline" min="1" max="200" inputmode="numeric">
-      <div class="form-hint">Used to calculate how much you've cut back</div>
+      <label class="form-label" for="js-s-baseline">Baseline units per week</label>
+      <input class="input" type="number" id="js-s-baseline" min="1" max="500" inputmode="numeric">
+      <div class="form-hint">Your starting point — what you were drinking before cutting back (in units, not raw drinks)</div>
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="js-s-cost">Average cost per drink</label>
+      <label class="form-label" for="js-s-cost">Cost per unit</label>
       <input class="input" type="number" id="js-s-cost" min="0" step="0.5" inputmode="decimal">
+      <div class="form-hint">Average price of one standard drink</div>
     </div>
 
     <div class="form-group">
@@ -668,28 +740,28 @@ footer {
 
     <hr class="divider">
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn-outline"        id="js-export-btn">Export data</button>
       <button class="btn-danger-outline" id="js-clear-btn">Clear all data</button>
     </div>
   </div>
 </div>
 
-<!-- ── Onboarding modal ── -->
-<div class="overlay center" id="js-onboarding" role="dialog" aria-modal="true" aria-label="Welcome">
+<!-- Onboarding modal -->
+<div class="overlay center" id="js-onboarding" role="dialog" aria-modal="true" aria-label="Setup">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="onb-icon">🥂</div>
-    <div class="onb-title">Welcome to CutBack</div>
-    <div class="onb-sub">Track your drinking, watch money pile up. No streaks, no pressure — just you cutting back at your own pace.</div>
+    <div class="onb-title">CutBack</div>
+    <div class="onb-sub">Set your baseline so the app can calculate how much you've cut back and how much money you're saving.</div>
 
     <div class="form-group">
-      <label class="form-label" for="js-o-baseline">How many drinks per week do you currently have?</label>
-      <input class="input" type="number" id="js-o-baseline" min="1" max="200" placeholder="14" inputmode="numeric">
+      <label class="form-label" for="js-o-baseline">How many units per week right now?</label>
+      <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="20" inputmode="numeric">
+      <div class="form-hint">A standard beer = 1 unit. A big IPA = 2 units. You can change this later.</div>
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="js-o-cost">Average cost per drink</label>
+      <label class="form-label" for="js-o-cost">Cost per unit</label>
       <input class="input" type="number" id="js-o-cost" min="0" step="0.5" placeholder="8" inputmode="decimal">
     </div>
 
@@ -698,32 +770,43 @@ footer {
       <input class="input input-narrow" type="text" id="js-o-currency" placeholder="$" maxlength="3">
     </div>
 
-    <button class="btn-primary" id="js-o-save">Get Started</button>
+    <button class="btn-primary" id="js-o-save">Start tracking</button>
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="js-toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ===================== DATA ===================== */
 const SK = 'cb_s', LK = 'cb_l';
 
 let cfg = parse(localStorage.getItem(SK));
 let log = parse(localStorage.getItem(LK)) || [];
 let stepVal = 1;
+let selectedType = 'beer';
+
+const DRINK_TYPES = [
+  { id: 'light',    label: 'Light beer',  sub: '~4%',     mult: 0.8 },
+  { id: 'beer',     label: 'Beer',        sub: '5%',      mult: 1.0 },
+  { id: 'ipa',      label: 'IPA / Craft', sub: '6–8%',    mult: 2.0 },
+  { id: 'cider',    label: 'Cider',       sub: '5%',      mult: 1.0 },
+  { id: 'wine',     label: 'Wine',        sub: '5 oz',    mult: 1.2 },
+  { id: 'wine-lg',  label: 'Wine large',  sub: '8 oz',    mult: 1.8 },
+  { id: 'cocktail', label: 'Cocktail',    sub: '1 shot',  mult: 1.0 },
+  { id: 'double',   label: 'Double',      sub: '2 shots', mult: 2.0 },
+  { id: 'shot',     label: 'Shot',        sub: '1.5 oz',  mult: 1.0 },
+];
 
 function parse(s) { try { return s ? JSON.parse(s) : null; } catch { return null; } }
-
 function saveCfg() { localStorage.setItem(SK, JSON.stringify(cfg)); }
 function saveLog() { localStorage.setItem(LK, JSON.stringify(log)); }
 
-/* ===================== HELPERS ===================== */
+/* ── Helpers ── */
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 function pad(n) { return String(n).padStart(2,'0'); }
+function ymd(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 
 function fmtDate(s) {
   const [y,m,d] = s.split('-').map(Number);
@@ -739,42 +822,43 @@ function fmtMoney(n) {
 
 function weekBounds(offset = 0) {
   const now = new Date();
-  const dow = now.getDay(); // 0=Sun
-  const back = (dow + 6) % 7 + offset * 7; // days to Monday
-  const mon = new Date(now); mon.setDate(now.getDate() - back); mon.setHours(0,0,0,0);
-  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const dow  = now.getDay();
+  const back = (dow + 6) % 7 + offset * 7;
+  const mon  = new Date(now); mon.setDate(now.getDate() - back); mon.setHours(0,0,0,0);
+  const sun  = new Date(mon); sun.setDate(mon.getDate() + 6);
   return { start: ymd(mon), end: ymd(sun), label: fmtDate(ymd(mon)) };
 }
 
-function ymd(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function unitsOf(e) { return e.units ?? e.count; }
 
-function drinksInRange(s, e) {
-  return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + x.count, 0);
+function unitsInRange(s, e) {
+  return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + unitsOf(x), 0);
 }
 
-function todayDrinks() { return drinksInRange(today(), today()); }
+function todayUnits() { return unitsInRange(today(), today()); }
 
-/* ===================== STATS ===================== */
+function drinkType(id) { return DRINK_TYPES.find(t => t.id === id); }
+
+/* ── Stats ── */
 function calcStats() {
   const baseline = cfg.baseline;
   const cost     = cfg.costPerDrink;
   const { start, end } = weekBounds(0);
-  const thisWeek = drinksInRange(start, end);
-  const pct = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
-  const savedWeek = Math.max(0, baseline - thisWeek) * cost;
+  const thisWeek   = unitsInRange(start, end);
+  const pct        = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
+  const savedWeek  = Math.max(0, baseline - thisWeek) * cost;
 
   let totalSaved = 0;
   if (log.length) {
     const earliest = log.map(x => x.date).sort()[0];
     const [ey, em, ed] = earliest.split('-').map(Number);
     let cur = new Date(ey, em-1, ed);
-    const dow = cur.getDay();
-    cur.setDate(cur.getDate() - (dow + 6) % 7);
+    cur.setDate(cur.getDate() - (cur.getDay() + 6) % 7);
     const now = new Date();
     while (cur <= now) {
       const ws = ymd(cur);
       const we = new Date(cur); we.setDate(cur.getDate() + 6);
-      totalSaved += Math.max(0, baseline - drinksInRange(ws, ymd(we))) * cost;
+      totalSaved += Math.max(0, baseline - unitsInRange(ws, ymd(we))) * cost;
       cur.setDate(cur.getDate() + 7);
     }
   }
@@ -782,48 +866,47 @@ function calcStats() {
   return { thisWeek, baseline, pct, savedWeek, totalSaved };
 }
 
-/* ===================== RENDER ===================== */
+/* ── Render ── */
 function render() {
   if (!cfg) return;
-  const td = todayDrinks();
+  const td = todayUnits();
   const { thisWeek, baseline, pct, savedWeek, totalSaved } = calcStats();
   const sym = cfg.currency;
 
   // Today
-  qs('js-today-count').textContent = td;
-  qs('js-today-note').textContent = td === 0 ? 'Nothing logged today' :
-    td === 1 ? '1 drink logged' : `${td} drinks logged`;
+  qs('js-today-count').textContent = td % 1 === 0 ? td : td.toFixed(1);
+  qs('js-today-sub').textContent   = td === 0 ? 'no units logged' : `${td.toFixed(1)} unit${td === 1 ? '' : 's'} today`;
 
   const pillEl = qs('js-today-pill');
-  const baselinePerDay = baseline / 7;
+  const dailyBaseline = baseline / 7;
   if (td === 0) {
     pillEl.className = 'today-pill pill-good'; pillEl.textContent = 'Clear';
-  } else if (td <= Math.round(baselinePerDay)) {
+  } else if (td <= dailyBaseline) {
     pillEl.className = 'today-pill pill-good'; pillEl.textContent = 'Under avg';
   } else {
     pillEl.className = 'today-pill pill-warn'; pillEl.textContent = 'Over avg';
   }
 
   // This week
-  qs('js-week-count').textContent = thisWeek;
-  qs('js-week-meta').textContent = `vs ${baseline} baseline`;
+  qs('js-week-count').textContent = thisWeek % 1 === 0 ? thisWeek : thisWeek.toFixed(1);
+  qs('js-week-meta').textContent  = `vs ${baseline} unit baseline`;
 
   // Reduction
-  const redEl = qs('js-reduction');
+  const redEl   = qs('js-reduction');
   const redMeta = qs('js-reduction-meta');
   if (!log.length) {
     redEl.textContent = '—'; redEl.className = 'stat-value';
     redMeta.textContent = 'no data yet';
   } else {
-    redEl.textContent = pct >= 0 ? `${pct}%` : `+${Math.abs(pct)}%`;
-    redEl.className = 'stat-value ' + (pct >= 0 ? 'c-good' : 'c-warn');
+    redEl.textContent   = pct >= 0 ? `${pct}%` : `+${Math.abs(pct)}%`;
+    redEl.className     = 'stat-value ' + (pct >= 0 ? 'c-good' : 'c-warn');
     redMeta.textContent = pct >= 0 ? 'below baseline' : 'above baseline';
   }
 
   // Money
-  qs('js-saved-week').textContent  = sym + savedWeek.toFixed(0);
+  qs('js-saved-week').textContent      = sym + savedWeek.toFixed(0);
   qs('js-saved-week-meta').textContent  = 'saved this week';
-  qs('js-saved-total').textContent = fmtMoney(totalSaved);
+  qs('js-saved-total').textContent     = fmtMoney(totalSaved);
   qs('js-saved-total-meta').textContent = 'saved all time';
 
   renderChart();
@@ -831,26 +914,25 @@ function render() {
 }
 
 function renderChart() {
-  const barsEl  = qs('js-chart-bars');
+  const barsEl   = qs('js-chart-bars');
   const labelsEl = qs('js-chart-labels');
   const baseline = cfg.baseline;
 
   const weeks = [];
   for (let i = 7; i >= 0; i--) {
     const { start, end, label } = weekBounds(i);
-    weeks.push({ drinks: drinksInRange(start, end), label, current: i === 0 });
+    weeks.push({ units: unitsInRange(start, end), label, current: i === 0 });
   }
 
-  const maxVal = Math.max(baseline * 1.25, ...weeks.map(w => w.drinks), 1);
+  const maxVal = Math.max(baseline * 1.25, ...weeks.map(w => w.units), 1);
   const baselinePct = (baseline / maxVal * 100).toFixed(1);
 
-  // baseline line
   const line = document.createElement('div');
   line.className = 'chart-baseline-line';
   line.style.bottom = `${baselinePct}%`;
   const lbl = document.createElement('span');
   lbl.className = 'chart-baseline-label';
-  lbl.textContent = 'your baseline';
+  lbl.textContent = 'baseline';
   line.appendChild(lbl);
 
   barsEl.innerHTML = '';
@@ -859,19 +941,20 @@ function renderChart() {
   weeks.forEach(w => {
     const col = document.createElement('div');
     col.className = 'bar-col';
-
     const bar = document.createElement('div');
     bar.className = 'bar-fill';
-    const h = w.drinks > 0 ? (w.drinks / maxVal * 100).toFixed(1) : 0.6;
-    bar.style.height = `${h}%`;
+    bar.style.height = `${w.units > 0 ? (w.units / maxVal * 100).toFixed(1) : 0.8}%`;
 
-    let color;
     if (w.current) {
-      color = w.drinks <= baseline ? '#8b5cf6' : '#fbbf24';
+      bar.style.background = w.units <= baseline ? '#00ff87' : '#f9e900';
+      bar.style.boxShadow  = w.units <= baseline
+        ? '0 0 8px rgba(0,255,135,0.5)'
+        : '0 0 8px rgba(249,233,0,0.4)';
     } else {
-      color = w.drinks <= baseline ? 'rgba(52,211,153,0.55)' : 'rgba(248,113,113,0.5)';
+      bar.style.background = w.units <= baseline
+        ? 'rgba(0,255,135,0.38)'
+        : 'rgba(249,233,0,0.32)';
     }
-    bar.style.background = color;
 
     col.appendChild(bar);
     barsEl.appendChild(col);
@@ -887,18 +970,26 @@ function renderHistory() {
   const sorted = [...log].sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
 
   if (!sorted.length) {
-    el.innerHTML = `<div class="empty-state">No drinks logged yet.<br>Tap <strong>Log Drink</strong> to get started.</div>`;
+    el.innerHTML = `<div class="empty-state">Nothing logged yet.<br>Tap <strong>Log Drink</strong> to start.</div>`;
     return;
   }
 
   el.innerHTML = sorted.map(e => {
-    const label = e.date === today() ? 'Today' : fmtDate(e.date);
+    const dt = e.type ? drinkType(e.type) : null;
+    const typeName = dt ? dt.label : 'Drink';
+    const units    = unitsOf(e).toFixed(1);
+    const dateLabel = e.date === today() ? 'Today' : fmtDate(e.date);
+    const notePart = e.note ? `<span class="entry-meta">${e.note}</span>` : '';
     return `<div class="entry">
-      <span class="entry-date">${label}</span>
+      <span class="entry-date">${dateLabel}</span>
       <span class="entry-count">${e.count}</span>
-      <span class="entry-note">${e.note || '<span style="color:var(--muted)">—</span>'}</span>
-      <button class="entry-del" data-id="${e.id}" aria-label="Delete entry">
-        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+      <span class="entry-info">
+        <span class="entry-type">${typeName}</span>
+        ${notePart}
+      </span>
+      <span class="entry-units">${units}u</span>
+      <button class="entry-del" data-id="${e.id}" aria-label="Delete">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
@@ -907,26 +998,49 @@ function renderHistory() {
 
   el.querySelectorAll('.entry-del').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = Number(btn.dataset.id);
-      log = log.filter(x => x.id !== id);
-      saveLog();
-      render();
-      toast('Deleted');
+      log = log.filter(x => x.id !== Number(btn.dataset.id));
+      saveLog(); render(); toast('Deleted');
     });
   });
 }
 
-/* ===================== TOAST ===================== */
+/* ── Type grid ── */
+function renderTypeGrid() {
+  const el = qs('js-type-grid');
+  el.innerHTML = DRINK_TYPES.map(t => `
+    <button class="type-chip${t.id === selectedType ? ' selected' : ''}" data-type="${t.id}">
+      <span class="chip-label">${t.label}</span>
+      <span class="chip-sub">${t.sub}</span>
+      <span class="chip-mult">${t.mult}×</span>
+    </button>
+  `).join('');
+
+  el.querySelectorAll('.type-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedType = btn.dataset.type;
+      renderTypeGrid();
+      updateUnitReadout();
+    });
+  });
+}
+
+function updateUnitReadout() {
+  const mult  = drinkType(selectedType)?.mult ?? 1;
+  const units = (stepVal * mult).toFixed(1);
+  qs('js-unit-readout').textContent = `= ${units} unit${units === '1.0' ? '' : 's'}`;
+}
+
+/* ── Toast ── */
 let toastTimer;
 function toast(msg) {
   const el = qs('js-toast');
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-/* ===================== MODALS ===================== */
+/* ── Modals ── */
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -935,47 +1049,46 @@ function dismissOnBg(id) {
     if (e.target === document.getElementById(id)) closeModal(id);
   });
 }
-
 dismissOnBg('js-log-modal');
 dismissOnBg('js-settings-modal');
 
-/* ── Log modal ── */
+/* Log */
 qs('js-log-btn').addEventListener('click', () => {
-  stepVal = 1;
+  stepVal = 1; selectedType = 'beer';
   qs('js-step-val').textContent = 1;
   qs('js-log-date').value = today();
   qs('js-log-note').value = '';
+  renderTypeGrid();
+  updateUnitReadout();
   openModal('js-log-modal');
-  setTimeout(() => qs('js-log-note').focus(), 350);
 });
 
 qs('js-step-minus').addEventListener('click', () => {
-  if (stepVal > 1) { stepVal--; qs('js-step-val').textContent = stepVal; }
+  if (stepVal > 1) { stepVal--; qs('js-step-val').textContent = stepVal; updateUnitReadout(); }
 });
 qs('js-step-plus').addEventListener('click', () => {
-  if (stepVal < 30) { stepVal++; qs('js-step-val').textContent = stepVal; }
+  if (stepVal < 30) { stepVal++; qs('js-step-val').textContent = stepVal; updateUnitReadout(); }
 });
 
 qs('js-log-cancel').addEventListener('click', () => closeModal('js-log-modal'));
 
 qs('js-log-submit').addEventListener('click', () => {
-  const date = qs('js-log-date').value || today();
-  const note = qs('js-log-note').value.trim();
-  log.push({ id: Date.now(), date, count: stepVal, note });
-  saveLog();
-  closeModal('js-log-modal');
-  render();
-  toast(`Logged ${stepVal} drink${stepVal !== 1 ? 's' : ''}`);
+  const date  = qs('js-log-date').value || today();
+  const note  = qs('js-log-note').value.trim();
+  const mult  = drinkType(selectedType)?.mult ?? 1;
+  const units = +(stepVal * mult).toFixed(2);
+  log.push({ id: Date.now(), date, count: stepVal, type: selectedType, units, note });
+  saveLog(); closeModal('js-log-modal'); render();
+  toast(`Logged ${units.toFixed(1)} unit${units === 1 ? '' : 's'}`);
 });
 
-/* ── Settings modal ── */
+/* Settings */
 qs('js-settings-btn').addEventListener('click', () => {
   qs('js-s-baseline').value = cfg.baseline;
   qs('js-s-cost').value     = cfg.costPerDrink;
   qs('js-s-currency').value = cfg.currency;
   openModal('js-settings-modal');
 });
-
 qs('js-s-cancel').addEventListener('click', () => closeModal('js-settings-modal'));
 
 qs('js-s-save').addEventListener('click', () => {
@@ -983,57 +1096,50 @@ qs('js-s-save').addEventListener('click', () => {
   const c = parseFloat(qs('js-s-cost').value)     || cfg.costPerDrink;
   const s = qs('js-s-currency').value.trim()       || cfg.currency;
   cfg = { baseline: b, costPerDrink: c, currency: s };
-  saveCfg();
-  closeModal('js-settings-modal');
-  render();
-  toast('Settings saved');
+  saveCfg(); closeModal('js-settings-modal'); render(); toast('Saved');
 });
 
-/* ── Export ── */
+/* Export */
 qs('js-export-btn').addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify({ settings: cfg, log, exported: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'cutback-data.json' });
+  const blob = new Blob(
+    [JSON.stringify({ settings: cfg, log, exported: new Date().toISOString() }, null, 2)],
+    { type: 'application/json' }
+  );
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob), download: 'cutback-data.json'
+  });
   a.click(); URL.revokeObjectURL(a.href);
-  toast('Data exported');
+  toast('Exported');
 });
 
-/* ── Clear ── */
+/* Clear */
 qs('js-clear-btn').addEventListener('click', () => {
-  if (!confirm('Delete all your data? This cannot be undone.')) return;
+  if (!confirm('Delete all data? Cannot be undone.')) return;
   localStorage.removeItem(SK); localStorage.removeItem(LK);
   cfg = null; log = [];
   closeModal('js-settings-modal');
   openModal('js-onboarding');
 });
 
-/* ── Onboarding ── */
+/* Onboarding */
 qs('js-o-save').addEventListener('click', () => {
-  const b = parseFloat(qs('js-o-baseline').value) || 14;
+  const b = parseFloat(qs('js-o-baseline').value) || 20;
   const c = parseFloat(qs('js-o-cost').value)     || 8;
   const s = qs('js-o-currency').value.trim()       || '$';
   cfg = { baseline: b, costPerDrink: c, currency: s };
-  saveCfg();
-  closeModal('js-onboarding');
-  render();
-  toast('Welcome! Start logging your drinks 🥂');
+  saveCfg(); closeModal('js-onboarding'); render();
+  toast('Ready. Start logging.');
 });
 
-/* ── Keyboard ── */
+/* Keyboard */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    ['js-log-modal','js-settings-modal'].forEach(closeModal);
-  }
+  if (e.key === 'Escape') ['js-log-modal','js-settings-modal'].forEach(closeModal);
 });
 
-/* ===================== UTILS ===================== */
 function qs(id) { return document.getElementById(id); }
 
-/* ===================== INIT ===================== */
-if (cfg) {
-  render();
-} else {
-  openModal('js-onboarding');
-}
+/* Init */
+if (cfg) { render(); } else { openModal('js-onboarding'); }
 </script>
 </body>
 </html>
