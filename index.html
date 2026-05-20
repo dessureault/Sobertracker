@@ -691,25 +691,25 @@ footer {
 const SK = 'cb_s', LK = 'cb_l', GK = 'cb_gist';
 
 const DRINK_TYPES = [
-  { id:'light',    label:'Light beer',  sub:'~4%',     mult:0.8 },
-  { id:'beer',     label:'Beer',        sub:'5%',      mult:1.0 },
-  { id:'ipa',      label:'IPA / Craft', sub:'6–8%',    mult:2.0 },
-  { id:'wine',     label:'Wine',        sub:'5 oz',    mult:1.2 },
-  { id:'cocktail', label:'Cocktail',    sub:'2 oz',    mult:1.3 },
-  { id:'double',   label:'Double',      sub:'2 shots', mult:2.0 },
-  { id:'shot',     label:'Shot',        sub:'1.5 oz',  mult:1.0 },
+  { id:'light',    label:'Miller Light',       sub:'473ml 4%',  mult:1.1 },
+  { id:'beer',     label:'Regular beer',        sub:'355ml 5%',  mult:1.0 },
+  { id:'ipa',      label:'Grosse Laurentide',   sub:'710ml 5%',  mult:2.0 },
+  { id:'wine',     label:'Wine',                sub:'5 oz',      mult:1.2 },
+  { id:'cocktail', label:'Cocktail',            sub:'2 oz',      mult:1.3 },
+  { id:'double',   label:'Double',              sub:'2 shots',   mult:2.0 },
+  { id:'shot',     label:'Shot',                sub:'1.5 oz',    mult:1.0 },
 ];
 
 const WORD_NUMS = { a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8 };
 
 const TYPE_KEYWORDS = [
-  { kw:['light beer','light lager','light'],                               id:'light'    },
-  { kw:['ipa','craft beer','craft','pint of ipa','dipa','india pale'],     id:'ipa'      },
+  { kw:['grosse laurentide','grosse','laurentide','710'],                  id:'ipa'      },
+  { kw:['miller light','miller','473'],                                    id:'light'    },
   { kw:['wine','vino','glass of wine','rosé','rose'],                      id:'wine'     },
   { kw:['double whisky','double gin','double rum','double vodka','double'],id:'double'   },
   { kw:['shot','whisky','whiskey','gin','vodka','rum','tequila','bourbon','scotch','spirit','brandy'], id:'shot' },
   { kw:['cocktail','mojito','martini','negroni','manhattan','margarita','espresso martini','daiquiri'], id:'cocktail' },
-  { kw:['beer','pint','lager','ale','draught','draft'],                    id:'beer'     },
+  { kw:['regular beer','normal beer','beer','lager','ale'],                id:'beer'     },
 ];
 
 const DEFAULT_PRICES = {
