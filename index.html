@@ -694,10 +694,8 @@ const DRINK_TYPES = [
   { id:'light',    label:'Light beer',  sub:'~4%',     mult:0.8 },
   { id:'beer',     label:'Beer',        sub:'5%',      mult:1.0 },
   { id:'ipa',      label:'IPA / Craft', sub:'6–8%',    mult:2.0 },
-  { id:'cider',    label:'Cider',       sub:'5%',      mult:1.0 },
   { id:'wine',     label:'Wine',        sub:'5 oz',    mult:1.2 },
-  { id:'wine-lg',  label:'Wine large',  sub:'8 oz',    mult:1.8 },
-  { id:'cocktail', label:'Cocktail',    sub:'1 shot',  mult:1.0 },
+  { id:'cocktail', label:'Cocktail',    sub:'2 oz',    mult:1.3 },
   { id:'double',   label:'Double',      sub:'2 shots', mult:2.0 },
   { id:'shot',     label:'Shot',        sub:'1.5 oz',  mult:1.0 },
 ];
@@ -707,8 +705,6 @@ const WORD_NUMS = { a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, sev
 const TYPE_KEYWORDS = [
   { kw:['light beer','light lager','light'],                               id:'light'    },
   { kw:['ipa','craft beer','craft','pint of ipa','dipa','india pale'],     id:'ipa'      },
-  { kw:['cider'],                                                          id:'cider'    },
-  { kw:['large wine','big glass of wine','wine large','large glass'],      id:'wine-lg'  },
   { kw:['wine','vino','glass of wine','rosé','rose'],                      id:'wine'     },
   { kw:['double whisky','double gin','double rum','double vodka','double'],id:'double'   },
   { kw:['shot','whisky','whiskey','gin','vodka','rum','tequila','bourbon','scotch','spirit','brandy'], id:'shot' },
@@ -717,8 +713,8 @@ const TYPE_KEYWORDS = [
 ];
 
 const DEFAULT_PRICES = {
-  light: 4, beer: 5, ipa: 8, cider: 5,
-  wine: 12, 'wine-lg': 18, cocktail: 12, double: 14, shot: 6,
+  light: 4, beer: 5, ipa: 8,
+  wine: 12, cocktail: 12, double: 14, shot: 6,
 };
 
 /* ===================== STATE ===================== */
