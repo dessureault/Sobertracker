@@ -406,7 +406,16 @@ header {
 .stepper-btn:active { background: rgba(255,255,255,0.08); }
 .stepper-val { flex: 1; text-align: center; font-size: 1.9rem; font-weight: 800; color: var(--primary); }
 
-.unit-readout { text-align: center; font-size: 0.82rem; color: var(--cyan); font-weight: 700; margin-top: 7px; letter-spacing: 0.02em; }
+.unit-readout  { text-align: center; font-size: 0.82rem; color: var(--cyan); font-weight: 700; margin-top: 7px; letter-spacing: 0.02em; }
+.cost-readout  { text-align: center; font-size: 0.78rem; color: var(--warning); font-weight: 600; margin-top: 3px; }
+
+.price-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 16px; margin-top: 2px; }
+.price-row   { display: flex; align-items: center; gap: 8px; }
+.price-label { font-size: 0.78rem; color: var(--dim); flex: 1; min-width: 0; }
+.price-input { width: 72px; text-align: right; padding: 7px 9px; font-size: 0.85rem; flex-shrink: 0; }
+
+.entry-cost  { font-size: 0.7rem; color: var(--warning); font-weight: 700; flex-shrink: 0;
+               padding: 2px 6px; border-radius: 100px; background: rgba(249,233,0,0.08); }
 
 /* Buttons */
 .btn-primary {
@@ -573,6 +582,12 @@ footer {
         <button class="stepper-btn" id="js-step-plus" aria-label="Increase">+</button>
       </div>
       <div class="unit-readout" id="js-unit-readout">= 1.0 units</div>
+      <div class="cost-readout" id="js-cost-readout"></div>
+    </div>
+
+    <div class="form-group" style="margin-top:2px">
+      <label class="form-label" style="font-size:0.72rem;color:var(--dim)" for="js-log-price">Price override <span style="color:var(--muted)">(optional — e.g. bar price)</span></label>
+      <input class="input price-input" type="number" id="js-log-price" min="0" step="0.5" placeholder="leave blank for default" style="width:100%;font-size:0.85rem" inputmode="decimal">
     </div>
 
     <div class="form-group">
@@ -603,8 +618,8 @@ footer {
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="js-s-cost">Cost per unit</label>
-      <input class="input" type="number" id="js-s-cost" min="0" step="0.5" inputmode="decimal">
+      <label class="form-label">Drink prices <span style="color:var(--muted)">(per drink, in your currency)</span></label>
+      <div class="price-grid" id="js-price-grid"></div>
     </div>
 
     <div class="form-group">
@@ -661,11 +676,6 @@ footer {
     </div>
 
     <div class="form-group">
-      <label class="form-label" for="js-o-cost">Cost per unit</label>
-      <input class="input" type="number" id="js-o-cost" min="0" step="0.5" placeholder="8" inputmode="decimal">
-    </div>
-
-    <div class="form-group">
       <label class="form-label" for="js-o-currency">Currency symbol</label>
       <input class="input input-narrow" type="text" id="js-o-currency" placeholder="$" maxlength="3">
     </div>
@@ -705,6 +715,11 @@ const TYPE_KEYWORDS = [
   { kw:['cocktail','mojito','martini','negroni','manhattan','margarita','espresso martini','daiquiri'], id:'cocktail' },
   { kw:['beer','pint','lager','ale','draught','draft'],                    id:'beer'     },
 ];
+
+const DEFAULT_PRICES = {
+  light: 4, beer: 5, ipa: 8, cider: 5,
+  wine: 12, 'wine-lg': 18, cocktail: 12, double: 14, shot: 6,
+};
 
 /* ===================== STATE ===================== */
 let cfg      = parse(localStorage.getItem(SK));
@@ -753,6 +768,23 @@ function drinkType(id)    { return DRINK_TYPES.find(t => t.id === id); }
 
 function unitsInRange(s, e) {
   return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + unitsOf(x), 0);
+}
+
+function costOf(entry) {
+  if (entry.price != null) return entry.price;
+  const prices = cfg?.prices || {};
+  if (entry.type && prices[entry.type] != null) return prices[entry.type];
+  return cfg?.costPerDrink ?? DEFAULT_PRICES[entry.type] ?? 8;
+}
+
+function spentInRange(s, e) {
+  return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + costOf(x), 0);
+}
+
+function avgPricePerUnit() {
+  const prices = cfg?.prices || {};
+  const vals = DRINK_TYPES.map(t => (prices[t.id] ?? DEFAULT_PRICES[t.id] ?? 8) / t.mult);
+  return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
 function todayUnits() { return unitsInRange(today(), today()); }
@@ -861,11 +893,12 @@ function bgPush() {
 /* ===================== STATS ===================== */
 function calcStats() {
   const baseline = cfg.baseline;
-  const cost     = cfg.costPerDrink;
   const { start, end } = weekBounds(0);
-  const thisWeek  = unitsInRange(start, end);
-  const pct       = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
-  const savedWeek = Math.max(0, baseline - thisWeek) * cost;
+  const thisWeek         = unitsInRange(start, end);
+  const pct              = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
+  const spentWeek        = spentInRange(start, end);
+  const typicalCostWeek  = baseline * avgPricePerUnit();
+  const savedWeek        = Math.max(0, typicalCostWeek - spentWeek);
 
   let totalSaved = 0;
   if (log.length) {
@@ -877,7 +910,7 @@ function calcStats() {
     while (cur <= now) {
       const ws = ymd(cur);
       const we = new Date(cur); we.setDate(cur.getDate() + 6);
-      totalSaved += Math.max(0, baseline - unitsInRange(ws, ymd(we))) * cost;
+      totalSaved += Math.max(0, typicalCostWeek - spentInRange(ws, ymd(we)));
       cur.setDate(cur.getDate() + 7);
     }
   }
@@ -918,9 +951,9 @@ function render() {
   }
 
   qs('js-saved-week').textContent      = sym + savedWeek.toFixed(0);
-  qs('js-saved-week-meta').textContent  = 'saved this week';
+  qs('js-saved-week-meta').textContent  = '≈ vs baseline';
   qs('js-saved-total').textContent     = fmtMoney(totalSaved);
-  qs('js-saved-total-meta').textContent = 'saved all time';
+  qs('js-saved-total-meta').textContent = '≈ all time';
 
   renderChart();
   renderHistory();
@@ -983,6 +1016,8 @@ function renderHistory() {
     const units     = unitsOf(e).toFixed(1);
     const dateLabel = e.date === today() ? 'Today' : fmtDate(e.date);
     const notePart  = e.note ? `<span class="entry-meta">${e.note}</span>` : '';
+    const entryPrice = costOf(e);
+    const costStr    = (cfg.currency ?? '$') + entryPrice.toFixed(2);
     return `<div class="entry">
       <span class="entry-date">${dateLabel}</span>
       <span class="entry-count">${e.count}</span>
@@ -990,6 +1025,7 @@ function renderHistory() {
         <span class="entry-type">${typeName}</span>
         ${notePart}
       </span>
+      <span class="entry-cost">${costStr}</span>
       <span class="entry-units">${units}u</span>
       <button class="entry-del" data-id="${e.id}" aria-label="Delete">
         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
@@ -1030,6 +1066,29 @@ function updateUnitReadout() {
   const mult  = drinkType(selectedType)?.mult ?? 1;
   const units = (stepVal * mult).toFixed(1);
   qs('js-unit-readout').textContent = `= ${units} unit${units === '1.0' ? '' : 's'}`;
+
+  const costEl = qs('js-cost-readout');
+  if (!costEl) return;
+  const prices  = cfg?.prices || {};
+  const defPrice = prices[selectedType] ?? DEFAULT_PRICES[selectedType] ?? 8;
+  const override = parseFloat(qs('js-log-price')?.value);
+  const price    = isNaN(override) ? defPrice : override;
+  const sym      = cfg?.currency ?? '$';
+  costEl.textContent = `≈ ${sym}${(price * stepVal).toFixed(2)}`;
+}
+
+function renderPriceGrid() {
+  const el = qs('js-price-grid');
+  if (!el) return;
+  const prices = cfg?.prices || {};
+  el.innerHTML = DRINK_TYPES.map(t => {
+    const val = prices[t.id] ?? DEFAULT_PRICES[t.id] ?? '';
+    return `<div class="price-row">
+      <span class="price-label">${t.label}</span>
+      <input class="input price-input" type="number" min="0" step="0.5"
+             data-type="${t.id}" value="${val}" inputmode="decimal">
+    </div>`;
+  }).join('');
 }
 
 /* ===================== TOAST ===================== */
@@ -1058,13 +1117,16 @@ dismissOnBg('js-settings-modal');
 qs('js-log-btn').addEventListener('click', () => {
   stepVal = 1; selectedType = 'beer';
   qs('js-step-val').textContent = 1;
-  qs('js-log-text').value = '';
-  qs('js-log-date').value = today();
-  qs('js-log-note').value = '';
+  qs('js-log-text').value  = '';
+  qs('js-log-date').value  = today();
+  qs('js-log-note').value  = '';
+  qs('js-log-price').value = '';
   renderTypeGrid(); updateUnitReadout();
   openModal('js-log-modal');
   setTimeout(() => qs('js-log-text').focus(), 350);
 });
+
+qs('js-log-price').addEventListener('input', updateUnitReadout);
 
 qs('js-log-text').addEventListener('input', () => {
   const parsed = parseDrinkText(qs('js-log-text').value);
@@ -1085,11 +1147,15 @@ qs('js-step-plus').addEventListener('click', () => {
 qs('js-log-cancel').addEventListener('click', () => closeModal('js-log-modal'));
 
 qs('js-log-submit').addEventListener('click', () => {
-  const date  = qs('js-log-date').value || today();
-  const note  = qs('js-log-note').value.trim();
-  const mult  = drinkType(selectedType)?.mult ?? 1;
-  const units = +(stepVal * mult).toFixed(2);
-  log.push({ id: Date.now(), date, count: stepVal, type: selectedType, units, note });
+  const date         = qs('js-log-date').value || today();
+  const note         = qs('js-log-note').value.trim();
+  const mult         = drinkType(selectedType)?.mult ?? 1;
+  const units        = +(stepVal * mult).toFixed(2);
+  const prices       = cfg?.prices || {};
+  const defPrice     = prices[selectedType] ?? DEFAULT_PRICES[selectedType] ?? 8;
+  const priceOverride = parseFloat(qs('js-log-price').value);
+  const entryPrice   = isNaN(priceOverride) ? defPrice : priceOverride;
+  log.push({ id: Date.now(), date, count: stepVal, type: selectedType, units, note, price: entryPrice });
   saveLog(); bgPush(); closeModal('js-log-modal'); render();
   toast(`Logged ${units.toFixed(1)}u`);
 });
@@ -1097,8 +1163,8 @@ qs('js-log-submit').addEventListener('click', () => {
 /* ── Settings modal ── */
 qs('js-settings-btn').addEventListener('click', () => {
   qs('js-s-baseline').value = cfg.baseline;
-  qs('js-s-cost').value     = cfg.costPerDrink;
   qs('js-s-currency').value = cfg.currency;
+  renderPriceGrid();
   qs('js-gist-token').value = gistCfg.token;
   qs('js-gist-id').value    = gistCfg.gistId;
   qs('js-sync-status').textContent = gistCfg.lastSync
@@ -1111,9 +1177,13 @@ qs('js-s-cancel').addEventListener('click', () => closeModal('js-settings-modal'
 
 qs('js-s-save').addEventListener('click', () => {
   const b = parseFloat(qs('js-s-baseline').value) || cfg.baseline;
-  const c = parseFloat(qs('js-s-cost').value)     || cfg.costPerDrink;
   const s = qs('js-s-currency').value.trim()       || cfg.currency;
-  cfg = { baseline: b, costPerDrink: c, currency: s };
+  const prices = {};
+  document.querySelectorAll('.price-input').forEach(inp => {
+    const v = parseFloat(inp.value);
+    if (!isNaN(v) && inp.dataset.type) prices[inp.dataset.type] = v;
+  });
+  cfg = { baseline: b, currency: s, prices };
   saveCfg();
 
   const tok = qs('js-gist-token').value.trim();
@@ -1161,9 +1231,8 @@ qs('js-clear-btn').addEventListener('click', () => {
 /* ── Onboarding ── */
 qs('js-o-save').addEventListener('click', () => {
   const b = parseFloat(qs('js-o-baseline').value) || 20;
-  const c = parseFloat(qs('js-o-cost').value)     || 8;
   const s = qs('js-o-currency').value.trim()       || '$';
-  cfg = { baseline: b, costPerDrink: c, currency: s };
+  cfg = { baseline: b, currency: s, prices: { ...DEFAULT_PRICES } };
   saveCfg(); closeModal('js-onboarding'); render();
   toast('Ready. Start logging.');
 });
