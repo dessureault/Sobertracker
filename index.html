@@ -58,6 +58,8 @@ header {
   padding: 20px 0 8px;
 }
 
+.header-left { display: flex; align-items: center; gap: 8px; }
+
 .logo {
   font-size: 1.35rem;
   font-weight: 800;
@@ -67,6 +69,17 @@ header {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+#js-sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: none;
+  flex-shrink: 0;
+}
+.dot-ok    { background: var(--success); box-shadow: 0 0 6px var(--primary-glow); }
+.dot-busy  { background: var(--warning); }
+.dot-error { background: var(--danger); }
 
 .icon-btn {
   width: 38px;
@@ -133,10 +146,10 @@ header {
 .stat-value { font-size: 1.7rem; font-weight: 800; line-height: 1; }
 .stat-meta  { font-size: 0.75rem; color: var(--dim); margin-top: 5px; }
 
-.c-good    { color: var(--success); }
-.c-warn    { color: var(--warning); }
-.c-cyan    { color: var(--cyan); }
-.c-text    { color: var(--text); }
+.c-good  { color: var(--success); }
+.c-warn  { color: var(--warning); }
+.c-cyan  { color: var(--cyan); }
+.c-text  { color: var(--text); }
 
 /* ── Section heading ── */
 .section-heading {
@@ -228,70 +241,26 @@ header {
 }
 .entry:hover { border-color: rgba(255,255,255,0.11); }
 
-.entry-date {
-  font-size: 0.75rem;
-  color: var(--dim);
-  flex-shrink: 0;
-  min-width: 60px;
-}
-.entry-count {
-  font-size: 1.1rem;
-  font-weight: 800;
-  flex-shrink: 0;
-  min-width: 22px;
-}
-.entry-info {
-  flex: 1;
-  overflow: hidden;
-}
-.entry-type {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.entry-meta {
-  font-size: 0.7rem;
-  color: var(--dim);
-  margin-top: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.entry-date  { font-size: 0.75rem; color: var(--dim); flex-shrink: 0; min-width: 60px; }
+.entry-count { font-size: 1.1rem; font-weight: 800; flex-shrink: 0; min-width: 22px; }
+.entry-info  { flex: 1; overflow: hidden; }
+.entry-type  { font-size: 0.8rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entry-meta  { font-size: 0.7rem; color: var(--dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .entry-units {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--cyan);
-  flex-shrink: 0;
-  padding: 2px 7px;
-  border-radius: 100px;
-  background: rgba(0,212,255,0.1);
+  font-size: 0.72rem; font-weight: 700; color: var(--cyan); flex-shrink: 0;
+  padding: 2px 7px; border-radius: 100px; background: rgba(0,212,255,0.1);
 }
 .entry-del {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, color 0.15s;
-  flex-shrink: 0;
+  width: 28px; height: 28px; border-radius: 50%; border: none;
+  background: transparent; color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s; flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
 .entry-del:hover { background: rgba(255,71,87,0.12); color: var(--danger); }
 
 .empty-state {
-  text-align: center;
-  padding: 32px 20px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  line-height: 1.6;
+  text-align: center; padding: 32px 20px; color: var(--muted); font-size: 0.85rem; line-height: 1.6;
 }
 
 /* ── FAB ── */
@@ -318,23 +287,17 @@ header {
   white-space: nowrap;
   letter-spacing: 0.01em;
 }
-.fab:active {
-  transform: translateX(-50%) scale(0.96);
-  box-shadow: 0 0 14px var(--primary-glow);
-}
+.fab:active { transform: translateX(-50%) scale(0.96); box-shadow: 0 0 14px var(--primary-glow); }
 
 /* ── Modals ── */
 .overlay {
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  display: flex;
-  align-items: flex-end;
+  display: flex; align-items: flex-end;
   z-index: 200;
-  opacity: 0;
-  pointer-events: none;
+  opacity: 0; pointer-events: none;
   transition: opacity 0.22s;
 }
 .overlay.open { opacity: 1; pointer-events: all; }
@@ -347,12 +310,14 @@ header {
   width: 100%;
   transform: translateY(100%);
   transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .overlay.open .sheet { transform: translateY(0); }
 
 .sheet-handle {
-  width: 34px;
-  height: 3px;
+  width: 34px; height: 3px;
   background: var(--muted);
   border-radius: 2px;
   margin: 0 auto 16px;
@@ -377,14 +342,8 @@ header {
 
 /* ── Forms ── */
 .form-group { margin-bottom: 14px; }
-.form-label {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--dim);
-  margin-bottom: 7px;
-  font-weight: 500;
-}
-.form-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; }
+.form-label { display: block; font-size: 0.78rem; color: var(--dim); margin-bottom: 7px; font-weight: 500; }
+.form-hint  { font-size: 0.72rem; color: var(--muted); margin-top: 5px; line-height: 1.4; }
 
 .input {
   width: 100%;
@@ -400,7 +359,7 @@ header {
   appearance: none;
 }
 .input:focus { border-color: var(--border-focus); }
-.input[type="number"] { -moz-appearance: textfield; }
+.input[type="number"]  { -moz-appearance: textfield; }
 .input[type="number"]::-webkit-inner-spin-button,
 .input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 .input-narrow { max-width: 88px; }
@@ -426,124 +385,56 @@ header {
   border-color: var(--primary);
   background: rgba(0,255,135,0.07);
 }
-.chip-label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.2;
-}
-.chip-sub {
-  display: block;
-  font-size: 0.6rem;
-  color: var(--muted);
-  margin-top: 2px;
-}
-.chip-mult {
-  display: block;
-  font-size: 0.62rem;
-  color: var(--primary);
-  margin-top: 2px;
-  font-weight: 700;
-}
+.chip-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.chip-sub   { display: block; font-size: 0.6rem;  color: var(--muted); margin-top: 2px; }
+.chip-mult  { display: block; font-size: 0.62rem; color: var(--primary); margin-top: 2px; font-weight: 700; }
 
 /* Stepper */
 .stepper {
-  display: flex;
-  align-items: center;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  overflow: hidden;
-  user-select: none;
+  display: flex; align-items: center;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-sm); overflow: hidden; user-select: none;
 }
 .stepper-btn {
-  width: 54px;
-  height: 52px;
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 1.5rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.1s;
-  flex-shrink: 0;
+  width: 54px; height: 52px; border: none; background: transparent;
+  color: var(--text); font-size: 1.5rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s; flex-shrink: 0;
   -webkit-tap-highlight-color: transparent;
 }
 .stepper-btn:hover  { background: rgba(255,255,255,0.04); }
 .stepper-btn:active { background: rgba(255,255,255,0.08); }
-.stepper-val {
-  flex: 1;
-  text-align: center;
-  font-size: 1.9rem;
-  font-weight: 800;
-  color: var(--primary);
-}
+.stepper-val { flex: 1; text-align: center; font-size: 1.9rem; font-weight: 800; color: var(--primary); }
 
-.unit-readout {
-  text-align: center;
-  font-size: 0.82rem;
-  color: var(--cyan);
-  font-weight: 700;
-  margin-top: 7px;
-  letter-spacing: 0.02em;
-}
+.unit-readout { text-align: center; font-size: 0.82rem; color: var(--cyan); font-weight: 700; margin-top: 7px; letter-spacing: 0.02em; }
 
 /* Buttons */
 .btn-primary {
-  display: block;
-  width: 100%;
+  display: block; width: 100%;
   background: linear-gradient(120deg, var(--primary), var(--cyan));
-  color: #050a08;
-  border: none;
-  border-radius: var(--r-sm);
-  padding: 13px;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: opacity 0.15s;
-  letter-spacing: 0.01em;
+  color: #050a08; border: none; border-radius: var(--r-sm);
+  padding: 13px; font-size: 0.95rem; font-weight: 800; cursor: pointer;
+  margin-top: 8px; transition: opacity 0.15s; letter-spacing: 0.01em;
   -webkit-tap-highlight-color: transparent;
 }
 .btn-primary:active { opacity: 0.88; }
 
 .btn-ghost {
-  display: block;
-  width: 100%;
-  background: none;
-  border: none;
-  color: var(--dim);
-  padding: 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  margin-top: 2px;
-  -webkit-tap-highlight-color: transparent;
+  display: block; width: 100%; background: none; border: none;
+  color: var(--dim); padding: 12px; font-size: 0.9rem; cursor: pointer;
+  margin-top: 2px; -webkit-tap-highlight-color: transparent;
 }
 
 .btn-outline {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--dim);
-  border-radius: var(--r-sm);
-  padding: 8px 15px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
-  -webkit-tap-highlight-color: transparent;
+  background: none; border: 1px solid var(--border); color: var(--dim);
+  border-radius: var(--r-sm); padding: 8px 15px; font-size: 0.85rem; cursor: pointer;
+  transition: border-color 0.15s, color 0.15s; -webkit-tap-highlight-color: transparent;
 }
 .btn-outline:hover { border-color: rgba(255,255,255,0.18); color: var(--text); }
 
 .btn-danger-outline {
-  background: none;
-  border: 1px solid rgba(255,71,87,0.28);
-  color: var(--danger);
-  border-radius: var(--r-sm);
-  padding: 8px 15px;
-  font-size: 0.85rem;
-  cursor: pointer;
+  background: none; border: 1px solid rgba(255,71,87,0.28); color: var(--danger);
+  border-radius: var(--r-sm); padding: 8px 15px; font-size: 0.85rem; cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -551,57 +442,35 @@ header {
 
 /* ── Toast ── */
 .toast {
-  position: fixed;
-  top: 16px;
-  left: 50%;
+  position: fixed; top: 16px; left: 50%;
   transform: translateX(-50%) translateY(-80px);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 9px 18px;
-  font-size: 0.85rem;
-  color: var(--text);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 100px; padding: 9px 18px;
+  font-size: 0.85rem; color: var(--text);
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  z-index: 999;
-  white-space: nowrap;
+  z-index: 999; white-space: nowrap;
   transition: transform 0.26s cubic-bezier(0.4,0,0.2,1);
   pointer-events: none;
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
 footer {
-  text-align: center;
-  padding: 14px 0 6px;
-  font-size: 0.7rem;
-  color: var(--muted);
+  text-align: center; padding: 14px 0 6px;
+  font-size: 0.7rem; color: var(--muted);
 }
 
 /* ── Desktop ── */
 @media (min-width: 768px) {
   .app { max-width: 800px; }
-
-  .main-cols {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 20px;
-    align-items: start;
-  }
-
+  .main-cols { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
   .overlay { align-items: center; }
   .overlay:not(.center) .sheet {
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    max-width: 460px;
-    margin: 0 auto;
-    transform: translateY(16px) scale(0.97);
-    opacity: 0;
+    border-radius: 16px; border: 1px solid var(--border);
+    max-width: 460px; margin: 0 auto;
+    transform: translateY(16px) scale(0.97); opacity: 0;
     transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s;
   }
-  .overlay:not(.center).open .sheet {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-
+  .overlay:not(.center).open .sheet { transform: translateY(0) scale(1); opacity: 1; }
   .fab { bottom: 32px; }
 }
 </style>
@@ -610,7 +479,10 @@ footer {
 
 <div class="app">
   <header>
-    <span class="logo">CutBack</span>
+    <div class="header-left">
+      <span class="logo">CutBack</span>
+      <span id="js-sync-dot" title="Sync status"></span>
+    </div>
     <button class="icon-btn" id="js-settings-btn" aria-label="Settings">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
@@ -663,7 +535,7 @@ footer {
     <div>
       <div class="section-heading">Log History</div>
       <div class="history-list" id="js-history"></div>
-      <footer>Stored locally on this device.</footer>
+      <footer>Stored locally. Synced via GitHub Gist when configured.</footer>
     </div>
   </div>
 </div>
@@ -681,6 +553,12 @@ footer {
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">Log Drink</div>
+
+    <div class="form-group">
+      <label class="form-label" for="js-log-text">What did you drink? <span style="color:var(--muted)">(type to auto-fill)</span></label>
+      <input class="input" type="text" id="js-log-text"
+             placeholder="2 IPAs, glass of wine, a beer…" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
 
     <div class="form-group">
       <label class="form-label">Type</label>
@@ -721,13 +599,12 @@ footer {
     <div class="form-group">
       <label class="form-label" for="js-s-baseline">Baseline units per week</label>
       <input class="input" type="number" id="js-s-baseline" min="1" max="500" inputmode="numeric">
-      <div class="form-hint">Your starting point — what you were drinking before cutting back (in units, not raw drinks)</div>
+      <div class="form-hint">Your starting point before cutting back</div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="js-s-cost">Cost per unit</label>
       <input class="input" type="number" id="js-s-cost" min="0" step="0.5" inputmode="decimal">
-      <div class="form-hint">Average price of one standard drink</div>
     </div>
 
     <div class="form-group">
@@ -744,6 +621,29 @@ footer {
       <button class="btn-outline"        id="js-export-btn">Export data</button>
       <button class="btn-danger-outline" id="js-clear-btn">Clear all data</button>
     </div>
+
+    <hr class="divider">
+
+    <div class="section-heading" style="margin-top:0">Sync via GitHub Gist</div>
+
+    <div class="form-group">
+      <label class="form-label" for="js-gist-token">Personal Access Token <span style="color:var(--muted)">(gist scope)</span></label>
+      <input class="input" type="password" id="js-gist-token" placeholder="ghp_…" autocomplete="off">
+      <div class="form-hint">
+        <a href="https://github.com/settings/tokens/new?scopes=gist&description=CutBack" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;">Generate a token on GitHub</a>
+        — stored only on this device, sent only to api.github.com
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="js-gist-id">Gist ID <span style="color:var(--muted)">(paste on second device to link them)</span></label>
+      <input class="input" type="text" id="js-gist-id" placeholder="auto-created on first sync" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-top:2px;">
+      <button class="btn-outline" id="js-sync-btn">Sync now</button>
+      <span id="js-sync-status" style="font-size:0.72rem;color:var(--dim)"></span>
+    </div>
   </div>
 </div>
 
@@ -757,7 +657,7 @@ footer {
     <div class="form-group">
       <label class="form-label" for="js-o-baseline">How many units per week right now?</label>
       <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="20" inputmode="numeric">
-      <div class="form-hint">A standard beer = 1 unit. A big IPA = 2 units. You can change this later.</div>
+      <div class="form-hint">A regular beer = 1 unit. A big IPA = 2 units. Adjustable later.</div>
     </div>
 
     <div class="form-group">
@@ -777,40 +677,59 @@ footer {
 <div class="toast" id="js-toast" role="status" aria-live="polite"></div>
 
 <script>
-const SK = 'cb_s', LK = 'cb_l';
-
-let cfg = parse(localStorage.getItem(SK));
-let log = parse(localStorage.getItem(LK)) || [];
-let stepVal = 1;
-let selectedType = 'beer';
+/* ===================== CONSTANTS ===================== */
+const SK = 'cb_s', LK = 'cb_l', GK = 'cb_gist';
 
 const DRINK_TYPES = [
-  { id: 'light',    label: 'Light beer',  sub: '~4%',     mult: 0.8 },
-  { id: 'beer',     label: 'Beer',        sub: '5%',      mult: 1.0 },
-  { id: 'ipa',      label: 'IPA / Craft', sub: '6–8%',    mult: 2.0 },
-  { id: 'cider',    label: 'Cider',       sub: '5%',      mult: 1.0 },
-  { id: 'wine',     label: 'Wine',        sub: '5 oz',    mult: 1.2 },
-  { id: 'wine-lg',  label: 'Wine large',  sub: '8 oz',    mult: 1.8 },
-  { id: 'cocktail', label: 'Cocktail',    sub: '1 shot',  mult: 1.0 },
-  { id: 'double',   label: 'Double',      sub: '2 shots', mult: 2.0 },
-  { id: 'shot',     label: 'Shot',        sub: '1.5 oz',  mult: 1.0 },
+  { id:'light',    label:'Light beer',  sub:'~4%',     mult:0.8 },
+  { id:'beer',     label:'Beer',        sub:'5%',      mult:1.0 },
+  { id:'ipa',      label:'IPA / Craft', sub:'6–8%',    mult:2.0 },
+  { id:'cider',    label:'Cider',       sub:'5%',      mult:1.0 },
+  { id:'wine',     label:'Wine',        sub:'5 oz',    mult:1.2 },
+  { id:'wine-lg',  label:'Wine large',  sub:'8 oz',    mult:1.8 },
+  { id:'cocktail', label:'Cocktail',    sub:'1 shot',  mult:1.0 },
+  { id:'double',   label:'Double',      sub:'2 shots', mult:2.0 },
+  { id:'shot',     label:'Shot',        sub:'1.5 oz',  mult:1.0 },
 ];
 
-function parse(s) { try { return s ? JSON.parse(s) : null; } catch { return null; } }
-function saveCfg() { localStorage.setItem(SK, JSON.stringify(cfg)); }
-function saveLog() { localStorage.setItem(LK, JSON.stringify(log)); }
+const WORD_NUMS = { a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, seven:7, eight:8 };
 
-/* ── Helpers ── */
+const TYPE_KEYWORDS = [
+  { kw:['light beer','light lager','light'],                               id:'light'    },
+  { kw:['ipa','craft beer','craft','pint of ipa','dipa','india pale'],     id:'ipa'      },
+  { kw:['cider'],                                                          id:'cider'    },
+  { kw:['large wine','big glass of wine','wine large','large glass'],      id:'wine-lg'  },
+  { kw:['wine','vino','glass of wine','rosé','rose'],                      id:'wine'     },
+  { kw:['double whisky','double gin','double rum','double vodka','double'],id:'double'   },
+  { kw:['shot','whisky','whiskey','gin','vodka','rum','tequila','bourbon','scotch','spirit','brandy'], id:'shot' },
+  { kw:['cocktail','mojito','martini','negroni','manhattan','margarita','espresso martini','daiquiri'], id:'cocktail' },
+  { kw:['beer','pint','lager','ale','draught','draft'],                    id:'beer'     },
+];
+
+/* ===================== STATE ===================== */
+let cfg      = parse(localStorage.getItem(SK));
+let log      = parse(localStorage.getItem(LK)) || [];
+let gistCfg  = parse(localStorage.getItem(GK)) || { token:'', gistId:'', lastSync:null };
+let stepVal  = 1;
+let selectedType = 'beer';
+
+/* ===================== PERSISTENCE ===================== */
+function parse(s) { try { return s ? JSON.parse(s) : null; } catch { return null; } }
+function saveCfg()     { localStorage.setItem(SK, JSON.stringify(cfg)); }
+function saveLog()     { localStorage.setItem(LK, JSON.stringify(log)); }
+function saveGistCfg() { localStorage.setItem(GK, JSON.stringify(gistCfg)); }
+
+/* ===================== HELPERS ===================== */
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-function pad(n) { return String(n).padStart(2,'0'); }
-function ymd(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+function pad(n)  { return String(n).padStart(2,'0'); }
+function ymd(d)  { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 
 function fmtDate(s) {
   const [y,m,d] = s.split('-').map(Number);
-  return new Date(y, m-1, d).toLocaleDateString('en', { month:'short', day:'numeric' });
+  return new Date(y,m-1,d).toLocaleDateString('en', { month:'short', day:'numeric' });
 }
 
 function fmtMoney(n) {
@@ -821,7 +740,7 @@ function fmtMoney(n) {
 }
 
 function weekBounds(offset = 0) {
-  const now = new Date();
+  const now  = new Date();
   const dow  = now.getDay();
   const back = (dow + 6) % 7 + offset * 7;
   const mon  = new Date(now); mon.setDate(now.getDate() - back); mon.setHours(0,0,0,0);
@@ -829,7 +748,8 @@ function weekBounds(offset = 0) {
   return { start: ymd(mon), end: ymd(sun), label: fmtDate(ymd(mon)) };
 }
 
-function unitsOf(e) { return e.units ?? e.count; }
+function unitsOf(e)       { return e.units ?? e.count; }
+function drinkType(id)    { return DRINK_TYPES.find(t => t.id === id); }
 
 function unitsInRange(s, e) {
   return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + unitsOf(x), 0);
@@ -837,16 +757,115 @@ function unitsInRange(s, e) {
 
 function todayUnits() { return unitsInRange(today(), today()); }
 
-function drinkType(id) { return DRINK_TYPES.find(t => t.id === id); }
+/* ===================== TEXT PARSER ===================== */
+function parseDrinkText(raw) {
+  const s = raw.toLowerCase().trim();
+  if (!s) return null;
 
-/* ── Stats ── */
+  let count = 1;
+  const numM = s.match(/^(\d+)/);
+  if (numM) {
+    count = parseInt(numM[1]);
+  } else {
+    for (const [w, n] of Object.entries(WORD_NUMS)) {
+      if (s.startsWith(w + ' ') || s === w) { count = n; break; }
+    }
+  }
+
+  let type = null, best = 0;
+  for (const t of TYPE_KEYWORDS) {
+    for (const k of t.kw) {
+      if (s.includes(k) && k.length > best) { type = t.id; best = k.length; }
+    }
+  }
+
+  return { count: Math.min(Math.max(count, 1), 30), type };
+}
+
+/* ===================== GIST SYNC ===================== */
+function setSyncStatus(msg, state) {
+  const dot = qs('js-sync-dot');
+  const status = qs('js-sync-status');
+  if (status) status.textContent = msg;
+  dot.style.display = 'inline-block';
+  dot.className = state === 'ok' ? 'dot-ok' : state === 'busy' ? 'dot-busy' : 'dot-error';
+  dot.title = msg;
+}
+
+function ghFetch(path, method = 'GET', body = null) {
+  return fetch('https://api.github.com' + path, {
+    method,
+    headers: {
+      Authorization: `Bearer ${gistCfg.token}`,
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+}
+
+function mergeRemote(remote) {
+  const ids = new Set(log.map(e => e.id));
+  for (const e of (remote.log || [])) {
+    if (!ids.has(e.id)) log.push(e);
+  }
+  log.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+  saveLog();
+  if (remote.settings) { cfg = remote.settings; saveCfg(); }
+}
+
+async function pushGist() {
+  if (!gistCfg.token) return;
+  const content = JSON.stringify({ settings: cfg, log }, null, 2);
+  const fileObj  = { 'cutback.json': { content } };
+  if (!gistCfg.gistId) {
+    const d = await ghFetch('/gists', 'POST', {
+      description: 'CutBack app data',
+      public: false,
+      files: fileObj,
+    });
+    gistCfg.gistId = d.id;
+    saveGistCfg();
+    // update Gist ID field if settings modal is open
+    const idInput = qs('js-gist-id');
+    if (idInput) idInput.value = gistCfg.gistId;
+  } else {
+    await ghFetch(`/gists/${gistCfg.gistId}`, 'PATCH', { files: fileObj });
+  }
+}
+
+async function syncGist() {
+  if (!gistCfg.token) return;
+  setSyncStatus('syncing…', 'busy');
+  try {
+    if (gistCfg.gistId) {
+      const d = await ghFetch(`/gists/${gistCfg.gistId}`);
+      const remote = JSON.parse(d.files['cutback.json'].content);
+      mergeRemote(remote);
+      render();
+    }
+    await pushGist();
+    gistCfg.lastSync = Date.now();
+    saveGistCfg();
+    setSyncStatus('synced', 'ok');
+  } catch (e) {
+    setSyncStatus('sync failed', 'error');
+  }
+}
+
+/* push-on-save helper — fire and forget, swallows errors */
+function bgPush() {
+  if (gistCfg.token) pushGist().catch(() => setSyncStatus('sync failed', 'error'));
+}
+
+/* ===================== STATS ===================== */
 function calcStats() {
   const baseline = cfg.baseline;
   const cost     = cfg.costPerDrink;
   const { start, end } = weekBounds(0);
-  const thisWeek   = unitsInRange(start, end);
-  const pct        = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
-  const savedWeek  = Math.max(0, baseline - thisWeek) * cost;
+  const thisWeek  = unitsInRange(start, end);
+  const pct       = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
+  const savedWeek = Math.max(0, baseline - thisWeek) * cost;
 
   let totalSaved = 0;
   if (log.length) {
@@ -862,18 +881,16 @@ function calcStats() {
       cur.setDate(cur.getDate() + 7);
     }
   }
-
   return { thisWeek, baseline, pct, savedWeek, totalSaved };
 }
 
-/* ── Render ── */
+/* ===================== RENDER ===================== */
 function render() {
   if (!cfg) return;
   const td = todayUnits();
   const { thisWeek, baseline, pct, savedWeek, totalSaved } = calcStats();
   const sym = cfg.currency;
 
-  // Today
   qs('js-today-count').textContent = td % 1 === 0 ? td : td.toFixed(1);
   qs('js-today-sub').textContent   = td === 0 ? 'no units logged' : `${td.toFixed(1)} unit${td === 1 ? '' : 's'} today`;
 
@@ -887,23 +904,19 @@ function render() {
     pillEl.className = 'today-pill pill-warn'; pillEl.textContent = 'Over avg';
   }
 
-  // This week
   qs('js-week-count').textContent = thisWeek % 1 === 0 ? thisWeek : thisWeek.toFixed(1);
   qs('js-week-meta').textContent  = `vs ${baseline} unit baseline`;
 
-  // Reduction
   const redEl   = qs('js-reduction');
   const redMeta = qs('js-reduction-meta');
   if (!log.length) {
-    redEl.textContent = '—'; redEl.className = 'stat-value';
-    redMeta.textContent = 'no data yet';
+    redEl.textContent = '—'; redEl.className = 'stat-value'; redMeta.textContent = 'no data yet';
   } else {
     redEl.textContent   = pct >= 0 ? `${pct}%` : `+${Math.abs(pct)}%`;
     redEl.className     = 'stat-value ' + (pct >= 0 ? 'c-good' : 'c-warn');
     redMeta.textContent = pct >= 0 ? 'below baseline' : 'above baseline';
   }
 
-  // Money
   qs('js-saved-week').textContent      = sym + savedWeek.toFixed(0);
   qs('js-saved-week-meta').textContent  = 'saved this week';
   qs('js-saved-total').textContent     = fmtMoney(totalSaved);
@@ -924,40 +937,30 @@ function renderChart() {
     weeks.push({ units: unitsInRange(start, end), label, current: i === 0 });
   }
 
-  const maxVal = Math.max(baseline * 1.25, ...weeks.map(w => w.units), 1);
-  const baselinePct = (baseline / maxVal * 100).toFixed(1);
+  const maxVal       = Math.max(baseline * 1.25, ...weeks.map(w => w.units), 1);
+  const baselinePct  = (baseline / maxVal * 100).toFixed(1);
 
   const line = document.createElement('div');
   line.className = 'chart-baseline-line';
   line.style.bottom = `${baselinePct}%`;
   const lbl = document.createElement('span');
-  lbl.className = 'chart-baseline-label';
-  lbl.textContent = 'baseline';
+  lbl.className = 'chart-baseline-label'; lbl.textContent = 'baseline';
   line.appendChild(lbl);
 
   barsEl.innerHTML = '';
   barsEl.appendChild(line);
 
   weeks.forEach(w => {
-    const col = document.createElement('div');
-    col.className = 'bar-col';
-    const bar = document.createElement('div');
-    bar.className = 'bar-fill';
+    const col = document.createElement('div'); col.className = 'bar-col';
+    const bar = document.createElement('div'); bar.className = 'bar-fill';
     bar.style.height = `${w.units > 0 ? (w.units / maxVal * 100).toFixed(1) : 0.8}%`;
-
     if (w.current) {
       bar.style.background = w.units <= baseline ? '#00ff87' : '#f9e900';
-      bar.style.boxShadow  = w.units <= baseline
-        ? '0 0 8px rgba(0,255,135,0.5)'
-        : '0 0 8px rgba(249,233,0,0.4)';
+      bar.style.boxShadow  = w.units <= baseline ? '0 0 8px rgba(0,255,135,0.5)' : '0 0 8px rgba(249,233,0,0.4)';
     } else {
-      bar.style.background = w.units <= baseline
-        ? 'rgba(0,255,135,0.38)'
-        : 'rgba(249,233,0,0.32)';
+      bar.style.background = w.units <= baseline ? 'rgba(0,255,135,0.38)' : 'rgba(249,233,0,0.32)';
     }
-
-    col.appendChild(bar);
-    barsEl.appendChild(col);
+    col.appendChild(bar); barsEl.appendChild(col);
   });
 
   labelsEl.innerHTML = weeks.map((w, i) =>
@@ -975,11 +978,11 @@ function renderHistory() {
   }
 
   el.innerHTML = sorted.map(e => {
-    const dt = e.type ? drinkType(e.type) : null;
-    const typeName = dt ? dt.label : 'Drink';
-    const units    = unitsOf(e).toFixed(1);
+    const dt        = e.type ? drinkType(e.type) : null;
+    const typeName  = dt ? dt.label : 'Drink';
+    const units     = unitsOf(e).toFixed(1);
     const dateLabel = e.date === today() ? 'Today' : fmtDate(e.date);
-    const notePart = e.note ? `<span class="entry-meta">${e.note}</span>` : '';
+    const notePart  = e.note ? `<span class="entry-meta">${e.note}</span>` : '';
     return `<div class="entry">
       <span class="entry-date">${dateLabel}</span>
       <span class="entry-count">${e.count}</span>
@@ -999,27 +1002,26 @@ function renderHistory() {
   el.querySelectorAll('.entry-del').forEach(btn => {
     btn.addEventListener('click', () => {
       log = log.filter(x => x.id !== Number(btn.dataset.id));
-      saveLog(); render(); toast('Deleted');
+      saveLog(); bgPush(); render(); toast('Deleted');
     });
   });
 }
 
-/* ── Type grid ── */
+/* ===================== TYPE GRID ===================== */
 function renderTypeGrid() {
   const el = qs('js-type-grid');
   el.innerHTML = DRINK_TYPES.map(t => `
     <button class="type-chip${t.id === selectedType ? ' selected' : ''}" data-type="${t.id}">
       <span class="chip-label">${t.label}</span>
       <span class="chip-sub">${t.sub}</span>
-      <span class="chip-mult">${t.mult}×</span>
+      <span class="chip-mult">${t.mult}&times;</span>
     </button>
   `).join('');
 
   el.querySelectorAll('.type-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       selectedType = btn.dataset.type;
-      renderTypeGrid();
-      updateUnitReadout();
+      renderTypeGrid(); updateUnitReadout();
     });
   });
 }
@@ -1030,7 +1032,7 @@ function updateUnitReadout() {
   qs('js-unit-readout').textContent = `= ${units} unit${units === '1.0' ? '' : 's'}`;
 }
 
-/* ── Toast ── */
+/* ===================== TOAST ===================== */
 let toastTimer;
 function toast(msg) {
   const el = qs('js-toast');
@@ -1040,7 +1042,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-/* ── Modals ── */
+/* ===================== MODALS ===================== */
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
@@ -1052,15 +1054,25 @@ function dismissOnBg(id) {
 dismissOnBg('js-log-modal');
 dismissOnBg('js-settings-modal');
 
-/* Log */
+/* ── Log modal ── */
 qs('js-log-btn').addEventListener('click', () => {
   stepVal = 1; selectedType = 'beer';
   qs('js-step-val').textContent = 1;
+  qs('js-log-text').value = '';
   qs('js-log-date').value = today();
   qs('js-log-note').value = '';
-  renderTypeGrid();
-  updateUnitReadout();
+  renderTypeGrid(); updateUnitReadout();
   openModal('js-log-modal');
+  setTimeout(() => qs('js-log-text').focus(), 350);
+});
+
+qs('js-log-text').addEventListener('input', () => {
+  const parsed = parseDrinkText(qs('js-log-text').value);
+  if (!parsed) return;
+  if (parsed.type) { selectedType = parsed.type; renderTypeGrid(); }
+  stepVal = parsed.count;
+  qs('js-step-val').textContent = stepVal;
+  updateUnitReadout();
 });
 
 qs('js-step-minus').addEventListener('click', () => {
@@ -1078,17 +1090,23 @@ qs('js-log-submit').addEventListener('click', () => {
   const mult  = drinkType(selectedType)?.mult ?? 1;
   const units = +(stepVal * mult).toFixed(2);
   log.push({ id: Date.now(), date, count: stepVal, type: selectedType, units, note });
-  saveLog(); closeModal('js-log-modal'); render();
-  toast(`Logged ${units.toFixed(1)} unit${units === 1 ? '' : 's'}`);
+  saveLog(); bgPush(); closeModal('js-log-modal'); render();
+  toast(`Logged ${units.toFixed(1)}u`);
 });
 
-/* Settings */
+/* ── Settings modal ── */
 qs('js-settings-btn').addEventListener('click', () => {
   qs('js-s-baseline').value = cfg.baseline;
   qs('js-s-cost').value     = cfg.costPerDrink;
   qs('js-s-currency').value = cfg.currency;
+  qs('js-gist-token').value = gistCfg.token;
+  qs('js-gist-id').value    = gistCfg.gistId;
+  qs('js-sync-status').textContent = gistCfg.lastSync
+    ? `last synced ${fmtAgo(gistCfg.lastSync)}`
+    : gistCfg.token ? 'not synced yet' : '';
   openModal('js-settings-modal');
 });
+
 qs('js-s-cancel').addEventListener('click', () => closeModal('js-settings-modal'));
 
 qs('js-s-save').addEventListener('click', () => {
@@ -1096,10 +1114,30 @@ qs('js-s-save').addEventListener('click', () => {
   const c = parseFloat(qs('js-s-cost').value)     || cfg.costPerDrink;
   const s = qs('js-s-currency').value.trim()       || cfg.currency;
   cfg = { baseline: b, costPerDrink: c, currency: s };
-  saveCfg(); closeModal('js-settings-modal'); render(); toast('Saved');
+  saveCfg();
+
+  const tok = qs('js-gist-token').value.trim();
+  const gid = qs('js-gist-id').value.trim();
+  if (tok !== gistCfg.token || gid !== gistCfg.gistId) {
+    gistCfg.token = tok; gistCfg.gistId = gid; saveGistCfg();
+  }
+
+  closeModal('js-settings-modal'); render(); toast('Saved');
+  if (gistCfg.token) syncGist();
 });
 
-/* Export */
+qs('js-sync-btn').addEventListener('click', () => {
+  const tok = qs('js-gist-token').value.trim();
+  const gid = qs('js-gist-id').value.trim();
+  if (!tok) { toast('Enter a GitHub token first'); return; }
+  gistCfg.token = tok; gistCfg.gistId = gid; saveGistCfg();
+  syncGist().then(() => {
+    qs('js-sync-status').textContent = gistCfg.lastSync ? `last synced ${fmtAgo(gistCfg.lastSync)}` : '';
+    if (gistCfg.gistId) qs('js-gist-id').value = gistCfg.gistId;
+  });
+});
+
+/* ── Export ── */
 qs('js-export-btn').addEventListener('click', () => {
   const blob = new Blob(
     [JSON.stringify({ settings: cfg, log, exported: new Date().toISOString() }, null, 2)],
@@ -1108,20 +1146,19 @@ qs('js-export-btn').addEventListener('click', () => {
   const a = Object.assign(document.createElement('a'), {
     href: URL.createObjectURL(blob), download: 'cutback-data.json'
   });
-  a.click(); URL.revokeObjectURL(a.href);
-  toast('Exported');
+  a.click(); URL.revokeObjectURL(a.href); toast('Exported');
 });
 
-/* Clear */
+/* ── Clear ── */
 qs('js-clear-btn').addEventListener('click', () => {
   if (!confirm('Delete all data? Cannot be undone.')) return;
-  localStorage.removeItem(SK); localStorage.removeItem(LK);
+  [SK, LK].forEach(k => localStorage.removeItem(k));
   cfg = null; log = [];
   closeModal('js-settings-modal');
   openModal('js-onboarding');
 });
 
-/* Onboarding */
+/* ── Onboarding ── */
 qs('js-o-save').addEventListener('click', () => {
   const b = parseFloat(qs('js-o-baseline').value) || 20;
   const c = parseFloat(qs('js-o-cost').value)     || 8;
@@ -1131,15 +1168,30 @@ qs('js-o-save').addEventListener('click', () => {
   toast('Ready. Start logging.');
 });
 
-/* Keyboard */
+/* ── Keyboard ── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') ['js-log-modal','js-settings-modal'].forEach(closeModal);
 });
 
-function qs(id) { return document.getElementById(id); }
+/* ===================== UTILS ===================== */
+function qs(id)   { return document.getElementById(id); }
 
-/* Init */
-if (cfg) { render(); } else { openModal('js-onboarding'); }
+function fmtAgo(ts) {
+  const mins = Math.round((Date.now() - ts) / 60000);
+  if (mins < 1)   return 'just now';
+  if (mins < 60)  return `${mins}m ago`;
+  const hrs = Math.round(mins / 60);
+  if (hrs < 24)   return `${hrs}h ago`;
+  return `${Math.round(hrs/24)}d ago`;
+}
+
+/* ===================== INIT ===================== */
+if (cfg) {
+  render();
+  syncGist();
+} else {
+  openModal('js-onboarding');
+}
 </script>
 </body>
 </html>
