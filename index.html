@@ -846,7 +846,11 @@ function mergeRemote(remote) {
   }
   log.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
   saveLog();
-  if (remote.settings) { cfg = remote.settings; saveCfg(); }
+  if (remote.settings) {
+    const remoteTime = remote.settings.updatedAt ?? 0;
+    const localTime  = cfg?.updatedAt ?? 0;
+    if (remoteTime > localTime) { cfg = remote.settings; saveCfg(); }
+  }
 }
 
 async function pushGist() {
@@ -1188,7 +1192,7 @@ qs('js-s-save').addEventListener('click', () => {
     const v = parseFloat(inp.value);
     if (!isNaN(v) && inp.dataset.type) prices[inp.dataset.type] = v;
   });
-  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices };
+  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices, updatedAt: Date.now() };
   saveCfg();
 
   const tok = qs('js-gist-token').value.trim();
@@ -1238,7 +1242,7 @@ qs('js-o-save').addEventListener('click', () => {
   const b      = parseFloat(qs('js-o-baseline').value) || 56;
   const budget = parseFloat(qs('js-o-budget').value)   || 225;
   const s      = qs('js-o-currency').value.trim()       || '$';
-  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices: { ...DEFAULT_PRICES } };
+  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices: { ...DEFAULT_PRICES }, updatedAt: Date.now() };
   saveCfg(); closeModal('js-onboarding'); render();
   toast('Ready. Start logging.');
 });
