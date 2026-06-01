@@ -1198,7 +1198,7 @@ qs('js-s-save').addEventListener('click', () => {
   }
 
   closeModal('js-settings-modal'); render(); toast('Saved');
-  if (gistCfg.token) syncGist();
+  bgPush();
 });
 
 qs('js-sync-btn').addEventListener('click', () => {
