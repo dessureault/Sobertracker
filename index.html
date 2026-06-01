@@ -677,13 +677,13 @@ footer {
 
     <div class="form-group">
       <label class="form-label" for="js-o-baseline">How many units per week right now?</label>
-      <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="65" inputmode="numeric">
-      <div class="form-hint">Regular beer = 1 unit · Miller Light = 1.1 · Grosse Laurentide = 2 · Wine = 1.2</div>
+      <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="56" inputmode="numeric">
+      <div class="form-hint">Miller Light = 1.1 · IPA = 1.9 · Grosse Laurentide = 2 · Wine = 1.2</div>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="js-o-budget">Typical weekly spend</label>
-      <input class="input" type="number" id="js-o-budget" min="0" step="1" placeholder="222" inputmode="decimal">
+      <input class="input" type="number" id="js-o-budget" min="0" step="1" placeholder="225" inputmode="decimal">
       <div class="form-hint">What a normal week costs you — used to calculate savings</div>
     </div>
 
@@ -704,8 +704,8 @@ const SK = 'cb_s', LK = 'cb_l', GK = 'cb_gist';
 
 const DRINK_TYPES = [
   { id:'light',    label:'Miller Light',       sub:'473ml 4%',  mult:1.1 },
-  { id:'beer',     label:'Regular beer',        sub:'355ml 5%',  mult:1.0 },
-  { id:'ipa',      label:'Grosse Laurentide',   sub:'710ml 5%',  mult:2.0 },
+  { id:'beer',     label:'IPA',                sub:'473ml 7%',  mult:1.9 },
+  { id:'ipa',      label:'Grosse Laurentide',  sub:'710ml 5%',  mult:2.0 },
   { id:'wine',     label:'Wine',                sub:'5 oz',      mult:1.2 },
   { id:'cocktail', label:'Cocktail',            sub:'2 oz',      mult:1.3 },
   { id:'double',   label:'Double',              sub:'2 shots',   mult:2.0 },
@@ -716,16 +716,17 @@ const WORD_NUMS = { a:1, an:1, one:1, two:2, three:3, four:4, five:5, six:6, sev
 
 const TYPE_KEYWORDS = [
   { kw:['grosse laurentide','grosse','laurentide','710'],                  id:'ipa'      },
-  { kw:['miller light','miller','473'],                                    id:'light'    },
+  { kw:['miller light','miller'],                                          id:'light'    },
+  { kw:['india pale ale','ipa','craft beer','craft'],                      id:'beer'     },
   { kw:['wine','vino','glass of wine','rosé','rose'],                      id:'wine'     },
   { kw:['double whisky','double gin','double rum','double vodka','double'],id:'double'   },
   { kw:['shot','whisky','whiskey','gin','vodka','rum','tequila','bourbon','scotch','spirit','brandy'], id:'shot' },
   { kw:['cocktail','mojito','martini','negroni','manhattan','margarita','espresso martini','daiquiri'], id:'cocktail' },
-  { kw:['regular beer','normal beer','beer','lager','ale'],                id:'beer'     },
+  { kw:['regular beer','normal beer','beer','lager','ale'],                id:'light'    },
 ];
 
 const DEFAULT_PRICES = {
-  light: 3, beer: 5, ipa: 10,
+  light: 3, beer: 9, ipa: 10,
   wine: 12, cocktail: 12, double: 14, shot: 6,
 };
 
@@ -1234,8 +1235,8 @@ qs('js-clear-btn').addEventListener('click', () => {
 
 /* ── Onboarding ── */
 qs('js-o-save').addEventListener('click', () => {
-  const b      = parseFloat(qs('js-o-baseline').value) || 65;
-  const budget = parseFloat(qs('js-o-budget').value)   || 222;
+  const b      = parseFloat(qs('js-o-baseline').value) || 56;
+  const budget = parseFloat(qs('js-o-budget').value)   || 225;
   const s      = qs('js-o-currency').value.trim()       || '$';
   cfg = { baseline: b, weeklyBudget: budget, currency: s, prices: { ...DEFAULT_PRICES } };
   saveCfg(); closeModal('js-onboarding'); render();
