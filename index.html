@@ -618,6 +618,12 @@ footer {
     </div>
 
     <div class="form-group">
+      <label class="form-label" for="js-s-budget">Typical weekly spend</label>
+      <input class="input" type="number" id="js-s-budget" min="0" step="1" inputmode="decimal">
+      <div class="form-hint">What a typical week costs you — savings are calculated against this</div>
+    </div>
+
+    <div class="form-group">
       <label class="form-label">Drink prices <span style="color:var(--muted)">(per drink, in your currency)</span></label>
       <div class="price-grid" id="js-price-grid"></div>
     </div>
@@ -671,8 +677,14 @@ footer {
 
     <div class="form-group">
       <label class="form-label" for="js-o-baseline">How many units per week right now?</label>
-      <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="20" inputmode="numeric">
-      <div class="form-hint">A regular beer = 1 unit. A big IPA = 2 units. Adjustable later.</div>
+      <input class="input" type="number" id="js-o-baseline" min="1" max="500" placeholder="65" inputmode="numeric">
+      <div class="form-hint">Regular beer = 1 unit · Miller Light = 1.1 · Grosse Laurentide = 2 · Wine = 1.2</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="js-o-budget">Typical weekly spend</label>
+      <input class="input" type="number" id="js-o-budget" min="0" step="1" placeholder="222" inputmode="decimal">
+      <div class="form-hint">What a normal week costs you — used to calculate savings</div>
     </div>
 
     <div class="form-group">
@@ -713,7 +725,7 @@ const TYPE_KEYWORDS = [
 ];
 
 const DEFAULT_PRICES = {
-  light: 4, beer: 5, ipa: 8,
+  light: 3, beer: 5, ipa: 10,
   wine: 12, cocktail: 12, double: 14, shot: 6,
 };
 
@@ -775,12 +787,6 @@ function costOf(entry) {
 
 function spentInRange(s, e) {
   return log.filter(x => x.date >= s && x.date <= e).reduce((t, x) => t + costOf(x), 0);
-}
-
-function avgPricePerUnit() {
-  const prices = cfg?.prices || {};
-  const vals = DRINK_TYPES.map(t => (prices[t.id] ?? DEFAULT_PRICES[t.id] ?? 8) / t.mult);
-  return vals.reduce((a, b) => a + b, 0) / vals.length;
 }
 
 function todayUnits() { return unitsInRange(today(), today()); }
@@ -892,12 +898,12 @@ function calcStats() {
   const { start, end } = weekBounds(0);
   const thisWeek         = unitsInRange(start, end);
   const pct              = baseline > 0 ? Math.round((1 - thisWeek / baseline) * 100) : 0;
-  const spentWeek        = spentInRange(start, end);
-  const typicalCostWeek  = baseline * avgPricePerUnit();
-  const savedWeek        = Math.max(0, typicalCostWeek - spentWeek);
+  const spentWeek       = spentInRange(start, end);
+  const weeklyBudget    = cfg.weeklyBudget ?? 0;
+  const savedWeek       = Math.max(0, weeklyBudget - spentWeek);
 
   let totalSaved = 0;
-  if (log.length) {
+  if (log.length && weeklyBudget > 0) {
     const earliest = log.map(x => x.date).sort()[0];
     const [ey, em, ed] = earliest.split('-').map(Number);
     let cur = new Date(ey, em-1, ed);
@@ -906,7 +912,7 @@ function calcStats() {
     while (cur <= now) {
       const ws = ymd(cur);
       const we = new Date(cur); we.setDate(cur.getDate() + 6);
-      totalSaved += Math.max(0, typicalCostWeek - spentInRange(ws, ymd(we)));
+      totalSaved += Math.max(0, weeklyBudget - spentInRange(ws, ymd(we)));
       cur.setDate(cur.getDate() + 7);
     }
   }
@@ -1159,6 +1165,7 @@ qs('js-log-submit').addEventListener('click', () => {
 /* ── Settings modal ── */
 qs('js-settings-btn').addEventListener('click', () => {
   qs('js-s-baseline').value = cfg.baseline;
+  qs('js-s-budget').value   = cfg.weeklyBudget ?? '';
   qs('js-s-currency').value = cfg.currency;
   renderPriceGrid();
   qs('js-gist-token').value = gistCfg.token;
@@ -1172,14 +1179,15 @@ qs('js-settings-btn').addEventListener('click', () => {
 qs('js-s-cancel').addEventListener('click', () => closeModal('js-settings-modal'));
 
 qs('js-s-save').addEventListener('click', () => {
-  const b = parseFloat(qs('js-s-baseline').value) || cfg.baseline;
-  const s = qs('js-s-currency').value.trim()       || cfg.currency;
+  const b      = parseFloat(qs('js-s-baseline').value) || cfg.baseline;
+  const budget = parseFloat(qs('js-s-budget').value)   || cfg.weeklyBudget || 0;
+  const s      = qs('js-s-currency').value.trim()       || cfg.currency;
   const prices = {};
   document.querySelectorAll('.price-input').forEach(inp => {
     const v = parseFloat(inp.value);
     if (!isNaN(v) && inp.dataset.type) prices[inp.dataset.type] = v;
   });
-  cfg = { baseline: b, currency: s, prices };
+  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices };
   saveCfg();
 
   const tok = qs('js-gist-token').value.trim();
@@ -1226,9 +1234,10 @@ qs('js-clear-btn').addEventListener('click', () => {
 
 /* ── Onboarding ── */
 qs('js-o-save').addEventListener('click', () => {
-  const b = parseFloat(qs('js-o-baseline').value) || 20;
-  const s = qs('js-o-currency').value.trim()       || '$';
-  cfg = { baseline: b, currency: s, prices: { ...DEFAULT_PRICES } };
+  const b      = parseFloat(qs('js-o-baseline').value) || 65;
+  const budget = parseFloat(qs('js-o-budget').value)   || 222;
+  const s      = qs('js-o-currency').value.trim()       || '$';
+  cfg = { baseline: b, weeklyBudget: budget, currency: s, prices: { ...DEFAULT_PRICES } };
   saveCfg(); closeModal('js-onboarding'); render();
   toast('Ready. Start logging.');
 });
