@@ -781,10 +781,11 @@ function unitsInRange(s, e) {
 }
 
 function costOf(entry) {
-  if (entry.price != null) return entry.price;
+  const qty = entry.count ?? 1;
+  if (entry.price != null) return entry.price * qty;
   const prices = cfg?.prices || {};
-  if (entry.type && prices[entry.type] != null) return prices[entry.type];
-  return cfg?.costPerDrink ?? DEFAULT_PRICES[entry.type] ?? 8;
+  if (entry.type && prices[entry.type] != null) return prices[entry.type] * qty;
+  return (cfg?.costPerDrink ?? DEFAULT_PRICES[entry.type] ?? 8) * qty;
 }
 
 function spentInRange(s, e) {
